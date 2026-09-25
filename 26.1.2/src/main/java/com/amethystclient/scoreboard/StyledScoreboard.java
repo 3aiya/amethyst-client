@@ -40,6 +40,9 @@ public final class StyledScoreboard {
 	// The vanilla sidebar's colours: 40% black behind the title, 30% black behind the lines.
 	private static final int HEADER_BACKGROUND = 0x66000000;
 	private static final int BACKGROUND = 0x4D000000;
+	// A see-through white border around each panel, with a fainter line just inside it.
+	private static final int BORDER = 0x80FFFFFF;
+	private static final int INNER_BORDER = 0x26FFFFFF;
 
 	private StyledScoreboard() {
 	}
@@ -128,9 +131,17 @@ public final class StyledScoreboard {
 		}
 	}
 
-	/** A filled panel with its corner pixels left out, so the corners look rounded. */
+	/** A panel with rounded corners: a border, the background, and a faint line inside the border. */
 	private static void panel(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, int color) {
-		graphics.fill(x1 + 1, y1, x2 - 1, y2, color);
+		frame(graphics, x1, y1, x2, y2, BORDER);
+		graphics.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+		frame(graphics, x1 + 2, y1 + 2, x2 - 2, y2 - 2, INNER_BORDER);
+	}
+
+	/** A 1px rectangle outline with the corner pixels left out, so the corners look rounded. */
+	private static void frame(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, int color) {
+		graphics.fill(x1 + 1, y1, x2 - 1, y1 + 1, color);
+		graphics.fill(x1 + 1, y2 - 1, x2 - 1, y2, color);
 		graphics.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
 		graphics.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
 	}
