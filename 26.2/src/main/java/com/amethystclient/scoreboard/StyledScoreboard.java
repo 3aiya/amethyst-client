@@ -37,12 +37,9 @@ public final class StyledScoreboard {
 	private static final int PANEL_GAP = 3;
 	private static final int SCREEN_MARGIN = 3;
 
-	// Colours of the Amethyst Community scoreboard design: a see-through, light grey "frosted glass"
-	// background (the world shows through it) that gets a little greyer towards the bottom.
-	private static final int BACKGROUND_TOP = 0x50E4E7EA;
-	private static final int BACKGROUND_BOTTOM = 0x40BFC3C8;
-	private static final int BORDER = 0xFFEEF2E8;
-	private static final int OUTLINE = 0xCC000000;
+	// The vanilla sidebar's colours: 40% black behind the title, 30% black behind the lines.
+	private static final int HEADER_BACKGROUND = 0x66000000;
+	private static final int BACKGROUND = 0x4D000000;
 
 	private StyledScoreboard() {
 	}
@@ -114,34 +111,26 @@ public final class StyledScoreboard {
 		int y = (graphics.guiHeight() - totalHeight) / 2;
 
 		if (header != null) {
-			panel(graphics, left, y, right, y + singleHeight);
+			panel(graphics, left, y, right, y + singleHeight, HEADER_BACKGROUND);
 			centered(graphics, font, header, left, right, y + PADDING_Y);
 			y += singleHeight + PANEL_GAP;
 		}
 		if (!body.isEmpty()) {
-			panel(graphics, left, y, right, y + bodyHeight);
+			panel(graphics, left, y, right, y + bodyHeight, BACKGROUND);
 			for (int i = 0; i < body.size(); i++) {
 				graphics.text(font, body.get(i), left + PADDING_X, y + PADDING_Y + i * LINE_HEIGHT, -1, true);
 			}
 			y += bodyHeight + PANEL_GAP;
 		}
 		if (footer != null) {
-			panel(graphics, left, y, right, y + singleHeight);
+			panel(graphics, left, y, right, y + singleHeight, BACKGROUND);
 			centered(graphics, font, footer, left, right, y + PADDING_Y);
 		}
 	}
 
-	/** A panel with rounded corners: a dark outline, a light 1px border, then the background. */
-	private static void panel(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2) {
-		frame(graphics, x1, y1, x2, y2, OUTLINE);
-		frame(graphics, x1 + 1, y1 + 1, x2 - 1, y2 - 1, BORDER);
-		graphics.fillGradient(x1 + 2, y1 + 2, x2 - 2, y2 - 2, BACKGROUND_TOP, BACKGROUND_BOTTOM);
-	}
-
-	/** A 1px rectangle outline with the corner pixels left out, so the corners look rounded. */
-	private static void frame(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, int color) {
-		graphics.fill(x1 + 1, y1, x2 - 1, y1 + 1, color);
-		graphics.fill(x1 + 1, y2 - 1, x2 - 1, y2, color);
+	/** A filled panel with its corner pixels left out, so the corners look rounded. */
+	private static void panel(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, int color) {
+		graphics.fill(x1 + 1, y1, x2 - 1, y2, color);
 		graphics.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
 		graphics.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
 	}
