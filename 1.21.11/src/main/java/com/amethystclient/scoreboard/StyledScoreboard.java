@@ -48,9 +48,10 @@ public final class StyledScoreboard {
 	private static final int PANEL_GAP = 3;
 	private static final int SCREEN_MARGIN = 3;
 
-	private static final int BACKGROUND = 0xCC1B2614;
-	private static final int BORDER = 0xFFA6D86C;
-	private static final int INNER_BORDER = 0x55A6D86C;
+	// Colours of the Amethyst Community scoreboard design.
+	private static final int BACKGROUND = 0xF23E4B39;
+	private static final int BORDER = 0xFFEEF2E8;
+	private static final int OUTLINE = 0xE0101208;
 
 	private StyledScoreboard() {
 	}
@@ -153,17 +154,19 @@ public final class StyledScoreboard {
 		}
 	}
 
-	/** A translucent panel with a rounded 1px border and a faint inner line. */
+	/** A panel with rounded corners: a dark outline, a light 1px border, then the background. */
 	private static void panel(DrawContext context, int x1, int y1, int x2, int y2) {
-		context.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, BACKGROUND);
-		context.fill(x1 + 1, y1, x2 - 1, y1 + 1, BORDER);
-		context.fill(x1 + 1, y2 - 1, x2 - 1, y2, BORDER);
-		context.fill(x1, y1 + 1, x1 + 1, y2 - 1, BORDER);
-		context.fill(x2 - 1, y1 + 1, x2, y2 - 1, BORDER);
-		context.fill(x1 + 3, y1 + 2, x2 - 3, y1 + 3, INNER_BORDER);
-		context.fill(x1 + 3, y2 - 3, x2 - 3, y2 - 2, INNER_BORDER);
-		context.fill(x1 + 2, y1 + 3, x1 + 3, y2 - 3, INNER_BORDER);
-		context.fill(x2 - 3, y1 + 3, x2 - 2, y2 - 3, INNER_BORDER);
+		frame(context, x1, y1, x2, y2, OUTLINE);
+		frame(context, x1 + 1, y1 + 1, x2 - 1, y2 - 1, BORDER);
+		context.fill(x1 + 2, y1 + 2, x2 - 2, y2 - 2, BACKGROUND);
+	}
+
+	/** A 1px rectangle outline with the corner pixels left out, so the corners look rounded. */
+	private static void frame(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+		context.fill(x1 + 1, y1, x2 - 1, y1 + 1, color);
+		context.fill(x1 + 1, y2 - 1, x2 - 1, y2, color);
+		context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
+		context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
 	}
 
 	private static void centered(DrawContext context, TextRenderer font, Text text, int left, int right, int y) {
