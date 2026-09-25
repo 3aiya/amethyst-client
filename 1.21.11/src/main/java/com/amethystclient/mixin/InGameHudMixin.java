@@ -1,5 +1,6 @@
 package com.amethystclient.mixin;
 
+import com.amethystclient.AmethystServers;
 import com.amethystclient.scoreboard.StyledScoreboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -18,7 +19,7 @@ public abstract class InGameHudMixin {
 			at = @At("HEAD"),
 			cancellable = true)
 	private void amethystclient$styledSidebar(DrawContext context, ScoreboardObjective objective, CallbackInfo ci) {
-		if (StyledScoreboard.isStyledServer(MinecraftClient.getInstance())) {
+		if (AmethystServers.isAmethystServer(MinecraftClient.getInstance())) {
 			StyledScoreboard.render(context, objective);
 			ci.cancel();
 		}

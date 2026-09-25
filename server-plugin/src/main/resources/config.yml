@@ -1,0 +1,7 @@
+# Name shown in Discord for each server in FlameCord's config.yml "servers:" section.
+# Discord shows "Amethyst Community - <name>". A server that isn't listed here is shown with its
+# own name, first letter capitalised (e.g. "skyblock" -> "Skyblock").
+modes:
+  hub: Hub
+  survival: Survival
+  duels: Duels

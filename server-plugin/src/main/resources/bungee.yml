@@ -1,0 +1,5 @@
+name: AmethystPresence
+main: com.amethystclient.presence.AmethystPresencePlugin
+version: ${version}
+author: 3aiya
+description: Tells Amethyst Client which game mode (server) the player is in, for Discord Rich Presence.

@@ -1,5 +1,6 @@
 package com.amethystclient.mixin;
 
+import com.amethystclient.AmethystServers;
 import com.amethystclient.scoreboard.StyledScoreboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -15,7 +16,7 @@ public abstract class GuiMixin {
 	/** On Amethyst Community servers, draw the styled sidebar instead of the vanilla one. */
 	@Inject(method = "displayScoreboardSidebar", at = @At("HEAD"), cancellable = true)
 	private void amethystclient$styledSidebar(GuiGraphicsExtractor graphics, Objective objective, CallbackInfo ci) {
-		if (StyledScoreboard.isStyledServer(Minecraft.getInstance())) {
+		if (AmethystServers.isAmethystServer(Minecraft.getInstance())) {
 			StyledScoreboard.extract(graphics, objective);
 			ci.cancel();
 		}

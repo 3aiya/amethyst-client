@@ -1,0 +1,33 @@
+plugins {
+	id 'java'
+}
+
+group = 'com.amethystclient'
+version = '1.0.0'
+
+repositories {
+	mavenCentral()
+	// Brigadier, a dependency of the BungeeCord API.
+	maven { url = 'https://libraries.minecraft.net/' }
+}
+
+dependencies {
+	// FlameCord is a BungeeCord fork, so plugins are built against the BungeeCord API.
+	compileOnly 'net.md-5:bungeecord-api:1.21-R0.4'
+}
+
+processResources {
+	inputs.property 'version', project.version
+	filesMatching('bungee.yml') {
+		expand 'version': inputs.properties.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+	it.options.encoding = 'UTF-8'
+}
+
+jar {
+	archiveBaseName = 'AmethystPresence'
+}

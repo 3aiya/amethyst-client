@@ -3,11 +3,9 @@ package com.amethystclient.scoreboard;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerScoreEntry;
@@ -27,15 +25,6 @@ import net.minecraft.world.scores.Scoreboard;
  * </ul>
  */
 public final class StyledScoreboard {
-	/**
-	 * Servers that get the styled sidebar. A server matches when its address is one of these
-	 * hosts (the port is ignored) or, for a domain, a subdomain of one.
-	 */
-	private static final List<String> STYLED_SERVERS = List.of(
-			"amethystcommunity.net",
-			"156.67.217.177"
-	);
-
 	// Same order and limit as the vanilla sidebar.
 	private static final Comparator<PlayerScoreEntry> ORDER = Comparator.comparing(PlayerScoreEntry::value)
 			.reversed()
@@ -54,20 +43,6 @@ public final class StyledScoreboard {
 	private static final int OUTLINE = 0xE0101208;
 
 	private StyledScoreboard() {
-	}
-
-	public static boolean isStyledServer(Minecraft client) {
-		ServerData server = client.getCurrentServer();
-		if (server == null || server.ip == null) {
-			return false;
-		}
-		String host = hostOf(server.ip);
-		for (String styled : STYLED_SERVERS) {
-			if (host.equals(styled) || host.endsWith("." + styled)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public static void extract(GuiGraphicsExtractor graphics, Objective objective) {
@@ -175,20 +150,5 @@ public final class StyledScoreboard {
 
 	private static boolean isBlank(Component text) {
 		return text.getString().isBlank();
-	}
-
-	/** "Play.Example.com:25565" -> "play.example.com", "[::1]:25565" -> "::1". */
-	private static String hostOf(String address) {
-		String host = address.trim();
-		if (host.startsWith("[")) {
-			int end = host.indexOf(']');
-			host = end > 0 ? host.substring(1, end) : host.substring(1);
-		} else if (host.indexOf(':') == host.lastIndexOf(':') && host.indexOf(':') >= 0) {
-			host = host.substring(0, host.indexOf(':'));
-		}
-		if (host.endsWith(".")) {
-			host = host.substring(0, host.length() - 1);
-		}
-		return host.toLowerCase(Locale.ROOT);
 	}
 }
