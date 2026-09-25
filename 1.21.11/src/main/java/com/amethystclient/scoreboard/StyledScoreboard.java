@@ -37,12 +37,9 @@ public final class StyledScoreboard {
 	private static final int PANEL_GAP = 3;
 	private static final int SCREEN_MARGIN = 3;
 
-	// The vanilla sidebar's colours: 40% black behind the title, 30% black behind the lines.
-	private static final int HEADER_BACKGROUND = 0x66000000;
-	private static final int BACKGROUND = 0x4D000000;
-	// A see-through white border around each panel, with a fainter line just inside it.
-	private static final int BORDER = 0x80FFFFFF;
-	private static final int INNER_BORDER = 0x26FFFFFF;
+	private static final int BACKGROUND = 0xCC1B2614;
+	private static final int BORDER = 0xFFA6D86C;
+	private static final int INNER_BORDER = 0x55A6D86C;
 
 	private StyledScoreboard() {
 	}
@@ -114,27 +111,27 @@ public final class StyledScoreboard {
 		int y = (context.getScaledWindowHeight() - totalHeight) / 2;
 
 		if (header != null) {
-			panel(context, left, y, right, y + singleHeight, HEADER_BACKGROUND);
+			panel(context, left, y, right, y + singleHeight);
 			centered(context, font, header, left, right, y + PADDING_Y);
 			y += singleHeight + PANEL_GAP;
 		}
 		if (!body.isEmpty()) {
-			panel(context, left, y, right, y + bodyHeight, BACKGROUND);
+			panel(context, left, y, right, y + bodyHeight);
 			for (int i = 0; i < body.size(); i++) {
 				context.drawText(font, body.get(i), left + PADDING_X, y + PADDING_Y + i * LINE_HEIGHT, -1, true);
 			}
 			y += bodyHeight + PANEL_GAP;
 		}
 		if (footer != null) {
-			panel(context, left, y, right, y + singleHeight, BACKGROUND);
+			panel(context, left, y, right, y + singleHeight);
 			centered(context, font, footer, left, right, y + PADDING_Y);
 		}
 	}
 
-	/** A panel with rounded corners: a border, the background, and a faint line inside the border. */
-	private static void panel(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+	/** A translucent panel with a rounded 1px border and a faint inner line. */
+	private static void panel(DrawContext context, int x1, int y1, int x2, int y2) {
 		frame(context, x1, y1, x2, y2, BORDER);
-		context.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+		context.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, BACKGROUND);
 		frame(context, x1 + 2, y1 + 2, x2 - 2, y2 - 2, INNER_BORDER);
 	}
 
