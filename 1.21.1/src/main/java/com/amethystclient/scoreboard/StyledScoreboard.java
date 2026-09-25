@@ -37,10 +37,12 @@ public final class StyledScoreboard {
 	private static final int PANEL_GAP = 3;
 	private static final int SCREEN_MARGIN = 3;
 
-	// Colours of the Amethyst Community scoreboard design.
-	private static final int BACKGROUND = 0xF23E4B39;
+	// Colours of the Amethyst Community scoreboard design: a see-through, light grey "frosted glass"
+	// background (the world shows through it) that gets a little greyer towards the bottom.
+	private static final int BACKGROUND_TOP = 0x50E4E7EA;
+	private static final int BACKGROUND_BOTTOM = 0x40BFC3C8;
 	private static final int BORDER = 0xFFEEF2E8;
-	private static final int OUTLINE = 0xE0101208;
+	private static final int OUTLINE = 0xCC000000;
 
 	private StyledScoreboard() {
 	}
@@ -133,7 +135,7 @@ public final class StyledScoreboard {
 	private static void panel(DrawContext context, int x1, int y1, int x2, int y2) {
 		frame(context, x1, y1, x2, y2, OUTLINE);
 		frame(context, x1 + 1, y1 + 1, x2 - 1, y2 - 1, BORDER);
-		context.fill(x1 + 2, y1 + 2, x2 - 2, y2 - 2, BACKGROUND);
+		context.fillGradient(x1 + 2, y1 + 2, x2 - 2, y2 - 2, BACKGROUND_TOP, BACKGROUND_BOTTOM);
 	}
 
 	/** A 1px rectangle outline with the corner pixels left out, so the corners look rounded. */
@@ -148,7 +150,19 @@ public final class StyledScoreboard {
 		context.drawText(font, text, (left + right - font.getWidth(text)) / 2, y, -1, true);
 	}
 
+	/**
+	 * True when the line shows nothing. TAB's empty lines are often not plain spaces but invisible
+	 * characters such as the Hangul filler "ㅤ", so those count as blank too.
+	 */
 	private static boolean isBlank(Text text) {
-		return text.getString().isBlank();
+		return text.getString().codePoints().allMatch(StyledScoreboard::isInvisible);
+	}
+
+	private static boolean isInvisible(int c) {
+		return Character.isWhitespace(c)
+				|| Character.isSpaceChar(c)
+				|| Character.getType(c) == Character.FORMAT
+				|| c == 0x115F || c == 0x1160 || c == 0x3164 || c == 0xFFA0
+				|| c == 0x2800;
 	}
 }

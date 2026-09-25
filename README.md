@@ -56,10 +56,10 @@ Pick the file for **your** Minecraft version. All versions are also on the
 
 | Minecraft | Java | Fabric Loader | Download |
 |---|---|---|---|
-| **26.2** | 25+ | 0.18.4+ | [⬇ amethystclient-1.0.0+mc26.2.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.0-mc26.2/amethystclient-1.0.0+mc26.2.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.0-mc26.2) |
-| **26.1.2** | 25+ | 0.18.4+ | [⬇ amethystclient-1.0.0+mc26.1.2.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.0-mc26.1.2/amethystclient-1.0.0+mc26.1.2.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.0-mc26.1.2) |
-| **1.21.11** | 21+ | 0.16.0+ | [⬇ amethystclient-1.0.0+mc1.21.11.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.0-mc1.21.11/amethystclient-1.0.0+mc1.21.11.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.0-mc1.21.11) |
-| **1.21.1** | 21+ | 0.16.0+ | [⬇ amethystclient-1.0.0+mc1.21.1.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.0-mc1.21.1/amethystclient-1.0.0+mc1.21.1.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.0-mc1.21.1) |
+| **26.2** | 25+ | 0.18.4+ | [⬇ amethystclient-1.0.1+mc26.2.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.1-mc26.2/amethystclient-1.0.1+mc26.2.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.1-mc26.2) |
+| **26.1.2** | 25+ | 0.18.4+ | [⬇ amethystclient-1.0.1+mc26.1.2.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.1-mc26.1.2/amethystclient-1.0.1+mc26.1.2.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.1-mc26.1.2) |
+| **1.21.11** | 21+ | 0.16.0+ | [⬇ amethystclient-1.0.1+mc1.21.11.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.1-mc1.21.11/amethystclient-1.0.1+mc1.21.11.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.1-mc1.21.11) |
+| **1.21.1** | 21+ | 0.16.0+ | [⬇ amethystclient-1.0.1+mc1.21.1.jar](https://github.com/3aiya/amethyst-client/releases/download/v1.0.1-mc1.21.1/amethystclient-1.0.1+mc1.21.1.jar) · [release notes](https://github.com/3aiya/amethyst-client/releases/tag/v1.0.1-mc1.21.1) |
 
 Release files are named `amethystclient-<version>+mc<minecraft>.jar`.
 
