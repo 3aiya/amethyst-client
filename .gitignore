@@ -1,0 +1,13 @@
+# Gradle / Loom output (per version folder)
+**/.gradle/
+**/build/
+**/run/
+
+# Built jars are published as GitHub releases, not committed
+dist/
+
+# IDE
+bin/
+.idea/
+.vscode/
+*.iml

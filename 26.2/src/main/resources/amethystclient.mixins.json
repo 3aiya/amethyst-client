@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.amethystclient.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"ClientCommonPacketListenerImplMixin",
+		"MinecraftMixin",
+		"PackRepositoryMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

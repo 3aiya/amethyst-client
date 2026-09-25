@@ -1,0 +1,23 @@
+{
+	"schemaVersion": 1,
+	"id": "amethystclient",
+	"version": "${version}",
+	"name": "Amethyst Client",
+	"description": "Caches server resource packs per server and only re-downloads/re-applies them when the server's SHA-1 hash changes.",
+	"authors": [],
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.amethystclient.AmethystClient"
+		]
+	},
+	"mixins": [
+		"amethystclient.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
