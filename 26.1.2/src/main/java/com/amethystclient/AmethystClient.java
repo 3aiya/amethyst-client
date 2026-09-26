@@ -1,5 +1,6 @@
 package com.amethystclient;
 
+import com.amethystclient.autologin.AutoLogin;
 import com.amethystclient.packcache.ServerPackManager;
 import com.amethystclient.presence.PresenceTracker;
 import com.amethystclient.update.UpdateChecker;
@@ -21,6 +22,9 @@ public class AmethystClient implements ClientModInitializer {
 
 		// Discord Rich Presence, including the mode (Survival, Hub, ...) on Amethyst servers.
 		PresenceTracker.register();
+
+		// Answers the auth plugin's login/register prompt with the saved password.
+		AutoLogin.register();
 
 		// When the play phase starts, make sure the active cached pack belongs to this server.
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
