@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,12 +27,10 @@ import net.minecraft.text.Text;
 /**
  * Logs cracked accounts in on the Amethyst servers. The auth plugin asks for the password with a
  * "Login" / "Register" dialog (or a chat message); we answer with /login or /register using the
- * password saved for this username, generating one on first registration.
+ * password saved for this username. The first login or registration is typed by hand and remembered.
  */
 public final class AutoLogin {
 	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("amethystclient-autologin.properties");
-	private static final String PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-	private static final SecureRandom RANDOM = new SecureRandom();
 	private static final long RETRY_GRACE_MILLIS = 3000;
 
 	private enum Kind { LOGIN, REGISTER }
@@ -124,11 +121,11 @@ public final class AutoLogin {
 			}
 			registerSent = true;
 			if (password == null) {
-				password = generatePassword();
-				save(username, password);
+				// The first registration is done by hand; the password typed is saved for next time.
+				message(client, "§fRegister once and your password will be remembered for automatic login.");
+				return;
 			}
 			client.player.networkHandler.sendChatCommand("register " + password + " " + password);
-			message(client, "§fRegistered with password §e" + password + " §f(saved - you'll be logged in automatically).");
 		} else {
 			if (loginSent) {
 				return;
@@ -203,14 +200,6 @@ public final class AutoLogin {
 				collect(nested, fields);
 			}
 		}
-	}
-
-	private static String generatePassword() {
-		StringBuilder password = new StringBuilder();
-		for (int i = 0; i < 12; i++) {
-			password.append(PASSWORD_CHARS.charAt(RANDOM.nextInt(PASSWORD_CHARS.length())));
-		}
-		return password.toString();
 	}
 
 	private static void message(MinecraftClient client, String text) {
