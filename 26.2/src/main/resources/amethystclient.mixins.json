@@ -4,6 +4,7 @@
 	"package": "com.amethystclient.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"ClientCommonPacketListenerImplAccessor",
 		"ClientCommonPacketListenerImplMixin",
 		"HudMixin",
 		"MinecraftMixin",

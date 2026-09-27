@@ -4,6 +4,7 @@
 	"package": "com.amethystclient.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"ClientCommonNetworkHandlerAccessor",
 		"ClientCommonNetworkHandlerMixin",
 		"InGameHudMixin",
 		"MinecraftClientMixin",

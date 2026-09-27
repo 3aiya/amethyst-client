@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
+import org.jetbrains.annotations.Nullable;
 
 /** Recognises the Amethyst Community servers, which get the mod's server-specific features. */
 public final class AmethystServers {
@@ -23,7 +24,10 @@ public final class AmethystServers {
 	}
 
 	public static boolean isAmethystServer(MinecraftClient client) {
-		ServerInfo server = client.getCurrentServerEntry();
+		return isAmethystServer(client.getCurrentServerEntry());
+	}
+
+	public static boolean isAmethystServer(@Nullable ServerInfo server) {
 		if (server == null || server.address == null) {
 			return false;
 		}
