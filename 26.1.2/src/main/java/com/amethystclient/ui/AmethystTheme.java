@@ -51,7 +51,6 @@ public record AmethystTheme(
 
 	public static final int WHITE = 0xFFFFFFFF;
 	public static final int BACKDROP = 0x99000000;
-	public static final int LEDGE = 0x73000000;
 
 	/** The theme picked in the HUD settings, Dark when the saved name is unknown. */
 	public static AmethystTheme current() {

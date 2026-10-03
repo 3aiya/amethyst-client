@@ -69,27 +69,18 @@ public final class Ui {
 				hovered ? AmethystTheme.withAlpha(t.accent(), 0.5f) : t.border());
 	}
 
-	/** A soft coloured bloom: stacked translucent rounded rects growing outwards. */
-	public static void glow(Draw d, int x, int y, int w, int h, int color, int spread, float strength) {
-		for (int i = spread; i >= 1; i--) {
-			float a = strength * (1f - (float) i / (spread + 1)) / spread * 2f;
-			round(d, x - i, y - i, w + i * 2, h + i * 2, RADIUS_BUTTON + i, AmethystTheme.withAlpha(color, a));
-		}
-	}
-
 	// ---- text ----
 
-	/** Section title (§3): accent mark, then an uppercase label in zinc-400. Returns its height. */
+	/** Section title: a plain muted label. Returns its height. */
 	public static int sectionTitle(Draw d, AmethystTheme t, String label, int x, int y) {
-		round(d, x, y + 1, 3, d.lineHeight() - 3, 1, t.accent());
-		d.text("§l" + label.toUpperCase(), x + 7, y, AmethystTheme.TEXT_LABEL);
+		d.text(label, x, y, AmethystTheme.TEXT_MUTED);
 		return d.lineHeight();
 	}
 
 	/** "Amethyst" in zinc-400 + " Client" in the accent (§5.18). Returns its width. */
 	public static int wordmark(Draw d, AmethystTheme t, int x, int y) {
-		String first = "§lAmethyst";
-		String second = "§l Client";
+		String first = "Amethyst";
+		String second = " Client";
 		d.text(first, x, y, AmethystTheme.TEXT_LABEL);
 		d.text(second, x + d.textWidth(first), y, t.accent());
 		return d.textWidth(first) + d.textWidth(second);

@@ -4,21 +4,15 @@ import com.amethystclient.ui.AmethystTheme;
 import com.amethystclient.ui.Draw;
 import com.amethystclient.ui.Ui;
 
-/**
- * The launcher's chunky button (§5.1): 1px dark border and a 2px dark "ledge" underneath. Pressing
- * moves it down onto the ledge like a physical key; the primary variant lifts on hover and has an
- * accent glow underneath.
- */
-public class PixelButton extends Widget {
+/** A flat button with rounded corners: accent (primary), red (danger) or card-coloured (neutral). */
+public class FlatButton extends Widget {
 	public enum Variant { PRIMARY, DANGER, NEUTRAL }
-
-	private static final int LEDGE = 2;
 
 	public String label;
 	private final Variant variant;
 	private final Runnable action;
 
-	public PixelButton(String label, Variant variant, Runnable action) {
+	public FlatButton(String label, Variant variant, Runnable action) {
 		this.label = label;
 		this.variant = variant;
 		this.action = action;
@@ -52,18 +46,13 @@ public class PixelButton extends Widget {
 			text = AmethystTheme.disabled(text);
 		}
 
-		// The face sits on top of the ledge; pressed drops it 2px onto it, primary hover lifts it 1px.
-		int faceHeight = height - LEDGE;
-		int offset = down ? LEDGE : hover && variant == Variant.PRIMARY ? -1 : 0;
-		if (variant == Variant.PRIMARY && enabled && !down) {
-			Ui.glow(d, x, y + 4, width, faceHeight, t.accent(), 5, hover ? 0.5f : 0.35f);
+		// Flat and simple: the fill changes on hover, and pressing nudges it down 1px.
+		int offset = down ? 1 : 0;
+		Ui.round(d, x, y + offset, width, height, Ui.RADIUS_BUTTON, fill);
+		if (variant == Variant.NEUTRAL) {
+			Ui.outline(d, x, y + offset, width, height, Ui.RADIUS_BUTTON, hover ? t.borderLight() : t.border());
 		}
-		if (!down) {
-			Ui.round(d, x, y + LEDGE + offset, width, faceHeight, Ui.RADIUS_BUTTON, AmethystTheme.LEDGE);
-		}
-		Ui.box(d, x, y + offset, width, faceHeight, Ui.RADIUS_BUTTON, fill, AmethystTheme.LEDGE);
-		String shown = "§l" + label.toUpperCase();
-		Ui.centered(d, shown, x + width / 2, y + offset + (faceHeight - d.lineHeight()) / 2 + 1, text);
+		Ui.centered(d, label, x + width / 2, y + offset + (height - d.lineHeight()) / 2 + 1, text);
 	}
 
 	@Override

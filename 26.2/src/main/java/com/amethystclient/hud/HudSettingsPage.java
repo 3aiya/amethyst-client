@@ -7,7 +7,7 @@ import com.amethystclient.ui.Page;
 import com.amethystclient.ui.Ui;
 import com.amethystclient.ui.widget.ChipSelect;
 import com.amethystclient.ui.widget.GhostButton;
-import com.amethystclient.ui.widget.PixelButton;
+import com.amethystclient.ui.widget.FlatButton;
 import com.amethystclient.ui.widget.Slider;
 import com.amethystclient.ui.widget.Toggle;
 import com.amethystclient.ui.widget.Widget;
@@ -67,8 +67,8 @@ public class HudSettingsPage extends Page {
 	private final Toggle reduceMotion;
 	private final GhostButton editLayout;
 	private final GhostButton reset;
-	private final PixelButton done;
-	private final PixelButton layoutDone;
+	private final FlatButton done;
+	private final FlatButton layoutDone;
 	private final List<Widget> active = new ArrayList<>();
 	private Widget pressedWidget;
 
@@ -108,8 +108,8 @@ public class HudSettingsPage extends Page {
 		reduceMotion = new Toggle(() -> config.reduceMotion, on -> config.reduceMotion = on);
 		editLayout = new GhostButton("Edit layout", () -> setLayoutMode(true));
 		reset = new GhostButton("Reset", this::resetLayout);
-		done = new PixelButton("Done", PixelButton.Variant.PRIMARY, this::close);
-		layoutDone = new PixelButton("Done", PixelButton.Variant.PRIMARY, () -> setLayoutMode(false));
+		done = new FlatButton("Done", FlatButton.Variant.PRIMARY, this::close);
+		layoutDone = new FlatButton("Done", FlatButton.Variant.PRIMARY, () -> setLayoutMode(false));
 		open.set(1f);
 	}
 
@@ -246,7 +246,7 @@ public class HudSettingsPage extends Page {
 			int cy = railY + c.ordinal() * (NAV_HEIGHT + NAV_GAP);
 			boolean hover = mx >= px + PAD && mx < px + PAD + RAIL && my >= cy && my < cy + NAV_HEIGHT;
 			int color = c == category ? t.accent() : hover ? AmethystTheme.TEXT_HOVER : AmethystTheme.TEXT_MUTED;
-			Ui.centered(d, (c == category ? "§l" : "") + c.label, px + PAD + RAIL / 2, cy + (NAV_HEIGHT - d.lineHeight()) / 2 + 1, color);
+			Ui.centered(d, c.label, px + PAD + RAIL / 2, cy + (NAV_HEIGHT - d.lineHeight()) / 2 + 1, color);
 		}
 
 		// Content well.
