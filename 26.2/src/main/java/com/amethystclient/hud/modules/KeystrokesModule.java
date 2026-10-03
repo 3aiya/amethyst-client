@@ -2,6 +2,8 @@ package com.amethystclient.hud.modules;
 
 import com.amethystclient.hud.Game;
 import com.amethystclient.hud.HudModule;
+import com.amethystclient.hud.setting.BoolSetting;
+import com.amethystclient.hud.setting.SliderSetting;
 import com.amethystclient.ui.AmethystTheme;
 import com.amethystclient.ui.Draw;
 import com.amethystclient.ui.Motion;
@@ -11,38 +13,59 @@ import java.util.Map;
 
 /** W A S D, the mouse buttons and the space bar; a pressed key fills with the accent. */
 public class KeystrokesModule extends HudModule {
-	private static final int KEY = 20;
 	private static final int GAP = 2;
 	private static final int SPACE_HEIGHT = 10;
 
 	private final Map<Game.Key, Motion> fades = new EnumMap<>(Game.Key.class);
+	private final BoolSetting mouse;
+	private final BoolSetting space;
+	private final SliderSetting size;
 
 	public KeystrokesModule() {
 		super("keystrokes", "Keystrokes", "Movement keys and clicks", false, new Position(0, 1, MARGIN, -MARGIN));
 		for (Game.Key key : Game.Key.values()) {
 			fades.put(key, new Motion(0f, 80));
 		}
+		mouse = bool("mouse", "Mouse buttons", true);
+		space = bool("space", "Space bar", true);
+		size = slider("size", "Key size", 16, 28, 1, 20, v -> (int) v + " px");
+	}
+
+	private int key() {
+		return (int) size.get();
 	}
 
 	@Override
 	public void measure(Draw d, boolean preview) {
-		width = KEY * 3 + GAP * 2;
-		height = KEY * 3 + GAP * 3 + SPACE_HEIGHT;
+		int key = key();
+		width = key * 3 + GAP * 2;
+		height = key * 2 + GAP;
+		if (mouse.get()) {
+			height += GAP + key;
+		}
+		if (space.get()) {
+			height += GAP + SPACE_HEIGHT;
+		}
 	}
 
 	@Override
 	public void render(Draw d, AmethystTheme t, int x, int y, boolean preview) {
+		int key = key();
 		int half = (width - GAP) / 2;
-		key(d, t, Game.Key.FORWARD, "W", x + KEY + GAP, y, KEY, KEY);
-		int row = y + KEY + GAP;
-		key(d, t, Game.Key.LEFT, "A", x, row, KEY, KEY);
-		key(d, t, Game.Key.BACK, "S", x + KEY + GAP, row, KEY, KEY);
-		key(d, t, Game.Key.RIGHT, "D", x + (KEY + GAP) * 2, row, KEY, KEY);
-		row += KEY + GAP;
-		key(d, t, Game.Key.ATTACK, cpsLabel("LMB", CpsModule.left()), x, row, half, KEY);
-		key(d, t, Game.Key.USE, cpsLabel("RMB", CpsModule.right()), x + half + GAP, row, width - half - GAP, KEY);
-		row += KEY + GAP;
-		key(d, t, Game.Key.JUMP, null, x, row, width, SPACE_HEIGHT);
+		key(d, t, Game.Key.FORWARD, "W", x + key + GAP, y, key, key);
+		int row = y + key + GAP;
+		key(d, t, Game.Key.LEFT, "A", x, row, key, key);
+		key(d, t, Game.Key.BACK, "S", x + key + GAP, row, key, key);
+		key(d, t, Game.Key.RIGHT, "D", x + (key + GAP) * 2, row, key, key);
+		row += key + GAP;
+		if (mouse.get()) {
+			key(d, t, Game.Key.ATTACK, cpsLabel("LMB", CpsModule.left()), x, row, half, key);
+			key(d, t, Game.Key.USE, cpsLabel("RMB", CpsModule.right()), x + half + GAP, row, width - half - GAP, key);
+			row += key + GAP;
+		}
+		if (space.get()) {
+			key(d, t, Game.Key.JUMP, null, x, row, width, SPACE_HEIGHT);
+		}
 	}
 
 	/** The button name, or its clicks per second while clicking. */

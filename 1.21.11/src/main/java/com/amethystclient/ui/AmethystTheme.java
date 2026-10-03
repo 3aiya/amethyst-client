@@ -15,6 +15,12 @@ public record AmethystTheme(
 		int bg, int bgSidebar, int bgElevated, int bgCard, int bgCardHover,
 		int border, int borderLight) {
 
+	/** Soft pink on deep violet-black, the ClickGUI look. */
+	public static final AmethystTheme PINK = new AmethystTheme("Pink",
+			0xFFD16FDB, 0xFFC25BCC, 0xFF9B4DB3, 0xFF14081A,
+			0xFF13101A, 0xFF0F0C15, 0xFF1A1622, 0xFF1D1926, 0xFF25202F,
+			0xFF2B2537, 0xFF3A3348);
+
 	public static final AmethystTheme DARK = new AmethystTheme("Dark",
 			0xFFFF00FF, 0xFFE000E0, 0xFFC400C4, 0xFF000000,
 			0xFF0D0D10, 0xFF09090B, 0xFF17171B, 0xFF1B1B20, 0xFF232329,
@@ -30,7 +36,7 @@ public record AmethystTheme(
 			0xFF0A1210, 0xFF060D0B, 0xFF111E18, 0xFF15241C, 0xFF1C3126,
 			0xFF21362A, 0xFF2C4A38);
 
-	public static final List<AmethystTheme> ALL = List.of(DARK, BLUE, GREEN);
+	public static final List<AmethystTheme> ALL = List.of(PINK, DARK, BLUE, GREEN);
 
 	// Text ramp (Tailwind zinc), shared by the dark-family themes.
 	public static final int TEXT_HEADLINE = 0xFFFAFAFA;
@@ -52,7 +58,7 @@ public record AmethystTheme(
 	public static final int WHITE = 0xFFFFFFFF;
 	public static final int BACKDROP = 0x99000000;
 
-	/** The theme picked in the HUD settings, Dark when the saved name is unknown. */
+	/** The theme picked in the HUD settings, Pink when the saved name is unknown. */
 	public static AmethystTheme current() {
 		return byName(HudConfig.get().theme);
 	}
@@ -63,7 +69,7 @@ public record AmethystTheme(
 				return theme;
 			}
 		}
-		return DARK;
+		return PINK;
 	}
 
 	/** {@code argb} with a new alpha, e.g. {@code withAlpha(accent, 0.15f)}. */

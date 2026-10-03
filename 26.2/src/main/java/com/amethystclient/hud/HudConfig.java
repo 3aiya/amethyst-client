@@ -22,12 +22,14 @@ public final class HudConfig {
 	private static HudConfig instance;
 
 	/** Name of an {@link com.amethystclient.ui.AmethystTheme}. */
-	public String theme = "Dark";
+	public String theme = "Pink";
 	/** Alpha of the HUD panels' background, so the world shows through (guide: 70–80%). */
 	public double backgroundOpacity = 0.75;
 	public double scale = 1.0;
 	public boolean reduceMotion;
 	public Map<String, Module> modules = new LinkedHashMap<>();
+	/** Where each settings panel was dragged to: {x, y} in GUI pixels. */
+	public Map<String, int[]> panels = new LinkedHashMap<>();
 
 	public static final class Module {
 		public boolean enabled;
@@ -37,6 +39,8 @@ public final class HudConfig {
 		/** Pixel offset from that point, in HUD (scaled) pixels. */
 		public int offsetX;
 		public int offsetY;
+		/** The module's own settings (booleans, numbers and mode names), by key. */
+		public Map<String, Object> values = new LinkedHashMap<>();
 
 		Module(boolean enabled, HudModule.Position position) {
 			this.enabled = enabled;
@@ -70,6 +74,14 @@ public final class HudConfig {
 				if (config != null) {
 					if (config.modules == null) {
 						config.modules = new LinkedHashMap<>();
+					}
+					if (config.panels == null) {
+						config.panels = new LinkedHashMap<>();
+					}
+					for (Module module : config.modules.values()) {
+						if (module.values == null) {
+							module.values = new LinkedHashMap<>();
+						}
 					}
 					config.scale = Math.clamp(config.scale, 0.5, 2.0);
 					config.backgroundOpacity = Math.clamp(config.backgroundOpacity, 0.0, 1.0);

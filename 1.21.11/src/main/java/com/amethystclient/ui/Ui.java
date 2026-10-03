@@ -25,13 +25,56 @@ public final class Ui {
 
 	/** A filled rectangle with rounded corners. Each pixel is drawn once, so translucent colours work. */
 	public static void round(Draw d, int x, int y, int w, int h, int r, int color) {
+		round(d, x, y, w, h, r, color, true, true);
+	}
+
+	/** Like {@link #round}, with only the top and/or bottom corners rounded. */
+	public static void round(Draw d, int x, int y, int w, int h, int r, int color, boolean top, boolean bottom) {
 		r = Math.min(r, Math.min(w, h) / 2);
-		for (int i = 0; i < r; i++) {
+		int topRows = top ? r : 0;
+		int bottomRows = bottom ? r : 0;
+		for (int i = 0; i < topRows; i++) {
 			int in = inset(r, i);
 			d.fill(x + in, y + i, x + w - in, y + i + 1, color);
+		}
+		for (int i = 0; i < bottomRows; i++) {
+			int in = inset(r, i);
 			d.fill(x + in, y + h - i - 1, x + w - in, y + h - i, color);
 		}
-		d.fill(x, y + r, x + w, y + h - r, color);
+		d.fill(x, y + topRows, x + w, y + h - bottomRows, color);
+	}
+
+	/**
+	 * A small pixel icon: one string per row, '#' = filled. Runs of filled pixels are drawn as one
+	 * rect each.
+	 */
+	public static void icon(Draw d, String[] rows, int x, int y, int color) {
+		for (int row = 0; row < rows.length; row++) {
+			String line = rows[row];
+			int start = -1;
+			for (int col = 0; col <= line.length(); col++) {
+				boolean filled = col < line.length() && line.charAt(col) == '#';
+				if (filled && start < 0) {
+					start = col;
+				} else if (!filled && start >= 0) {
+					d.fill(x + start, y + row, x + col, y + row + 1, color);
+					start = -1;
+				}
+			}
+		}
+	}
+
+	/** Text drawn at {@code scale} with its top-left corner at ({@code x}, {@code y}). */
+	public static void text(Draw d, String text, float x, float y, int color, float scale) {
+		d.push();
+		d.translate(x, y);
+		d.scale(scale);
+		d.text(text, 0, 0, color);
+		d.pop();
+	}
+
+	public static int width(Draw d, String text, float scale) {
+		return (int) Math.ceil(d.textWidth(text) * scale);
 	}
 
 	/**

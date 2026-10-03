@@ -3,6 +3,9 @@ package com.amethystclient.ui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.StyleSpriteSource;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 /**
  * The only class the shared UI code draws through. Each Minecraft version has its own copy that
@@ -10,6 +13,9 @@ import net.minecraft.client.gui.DrawContext;
  * every version.
  */
 public final class Draw {
+	/** The UI font (Quicksand, see assets/amethystclient/font/ui.json). */
+	private static final StyleSpriteSource UI_FONT = new StyleSpriteSource.Font(Identifier.of("amethystclient", "ui"));
+
 	public final DrawContext graphics;
 	private final TextRenderer font = MinecraftClient.getInstance().textRenderer;
 	private float alpha = 1f;
@@ -41,12 +47,16 @@ public final class Draw {
 		color = apply(color);
 		// Very low alphas are drawn fully opaque by the font renderer, so skip them.
 		if (color >>> 24 >= 8) {
-			graphics.drawText(font, text, x, y, color, false);
+			graphics.drawText(font, styled(text), x, y, color, false);
 		}
 	}
 
 	public int textWidth(String text) {
-		return font.getWidth(text);
+		return font.getWidth(styled(text));
+	}
+
+	private static Text styled(String text) {
+		return Text.literal(text).styled(style -> style.withFont(UI_FONT));
 	}
 
 	public int lineHeight() {

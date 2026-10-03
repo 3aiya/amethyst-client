@@ -98,8 +98,8 @@ public final class Game {
 		return GLFW.glfwGetMouseButton(mc().getWindow().getHandle(), button) == GLFW.GLFW_PRESS;
 	}
 
-	/** Worn armour, helmet first, then the main-hand item; empty slots are left out. */
-	public static List<Item> equipment() {
+	/** Worn armour, helmet first, then (if {@code held}) the main-hand item; empty slots are left out. */
+	public static List<Item> equipment(boolean held) {
 		List<Item> items = new ArrayList<>();
 		ClientPlayerEntity player = mc().player;
 		if (player == null) {
@@ -108,7 +108,9 @@ public final class Game {
 		for (EquipmentSlot slot : ARMOR) {
 			add(items, player.getEquippedStack(slot));
 		}
-		add(items, player.getMainHandStack());
+		if (held) {
+			add(items, player.getMainHandStack());
+		}
 		return items;
 	}
 
