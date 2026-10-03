@@ -98,6 +98,11 @@ public final class Game {
 		return GLFW.glfwGetMouseButton(mc().getWindow().getHandle(), button) == GLFW.GLFW_PRESS;
 	}
 
+	/** The physical state of a keyboard key (GLFW key code), for module keybinds. */
+	public static boolean physicalKeyDown(int key) {
+		return GLFW.glfwGetKey(mc().getWindow().getHandle(), key) == GLFW.GLFW_PRESS;
+	}
+
 	/** Worn armour, helmet first, then (if {@code held}) the main-hand item; empty slots are left out. */
 	public static List<Item> equipment(boolean held) {
 		List<Item> items = new ArrayList<>();

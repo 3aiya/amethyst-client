@@ -1,26 +1,12 @@
 package com.amethystclient.hud;
 
-import com.amethystclient.hud.modules.ArmorModule;
-import com.amethystclient.hud.modules.CoordsModule;
 import com.amethystclient.hud.modules.CpsModule;
-import com.amethystclient.hud.modules.FpsModule;
-import com.amethystclient.hud.modules.KeystrokesModule;
-import com.amethystclient.hud.modules.PingModule;
 import com.amethystclient.ui.AmethystTheme;
 import com.amethystclient.ui.Draw;
 import com.amethystclient.ui.PageScreen;
-import java.util.List;
 
 /** The Amethyst HUD: draws the enabled modules on top of the vanilla HUD. */
 public final class AmethystHud {
-	public static final List<HudModule> MODULES = List.of(
-			new FpsModule(),
-			new PingModule(),
-			new CoordsModule(),
-			new CpsModule(),
-			new ArmorModule(),
-			new KeystrokesModule());
-
 	private AmethystHud() {
 	}
 
@@ -42,7 +28,7 @@ public final class AmethystHud {
 		AmethystTheme theme = AmethystTheme.current();
 		d.push();
 		d.scale(scale);
-		for (HudModule module : MODULES) {
+		for (HudModule module : Modules.HUD) {
 			if (!module.enabled()) {
 				continue;
 			}

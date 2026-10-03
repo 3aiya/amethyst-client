@@ -1,5 +1,6 @@
 package com.amethystclient.hud.modules;
 
+import com.amethystclient.hud.Category;
 import com.amethystclient.hud.Game;
 import com.amethystclient.hud.setting.BoolSetting;
 import com.amethystclient.hud.setting.ModeSetting;
@@ -10,7 +11,7 @@ public class CoordsModule extends SimpleModule {
 	private final ModeSetting format;
 
 	public CoordsModule() {
-		super("coords", "Coordinates", "Position and facing", true, Position.topLeft(34));
+		super("coords", "Coordinates", "Position and facing", Category.WORLD, false, Position.topLeft(34));
 		showFacing = bool("facing", "Show facing", true);
 		format = mode("format", "Format", "Whole", "Whole", "Decimal");
 	}

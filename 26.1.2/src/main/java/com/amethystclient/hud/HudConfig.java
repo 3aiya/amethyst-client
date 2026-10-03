@@ -8,7 +8,9 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,8 @@ public final class HudConfig {
 	public Map<String, Module> modules = new LinkedHashMap<>();
 	/** Where each settings panel was dragged to: {x, y} in GUI pixels. */
 	public Map<String, int[]> panels = new LinkedHashMap<>();
+	/** ClickGUI columns folded up to their header (right click on the header). */
+	public Set<String> collapsed = new LinkedHashSet<>();
 
 	public static final class Module {
 		public boolean enabled;
@@ -39,6 +43,8 @@ public final class HudConfig {
 		/** Pixel offset from that point, in HUD (scaled) pixels. */
 		public int offsetX;
 		public int offsetY;
+		/** GLFW key code that toggles the module; 0 = none. */
+		public int key;
 		/** The module's own settings (booleans, numbers and mode names), by key. */
 		public Map<String, Object> values = new LinkedHashMap<>();
 
@@ -63,8 +69,9 @@ public final class HudConfig {
 	}
 
 	/** This module's settings, created with the module's defaults the first time. */
-	public Module module(HudModule module) {
-		return modules.computeIfAbsent(module.id, id -> new Module(module.enabledByDefault, module.defaultPosition));
+	public Module module(ClientModule module) {
+		return modules.computeIfAbsent(module.id, id -> new Module(module.enabledByDefault,
+				module instanceof HudModule hud ? hud.defaultPosition : HudModule.Position.NONE));
 	}
 
 	private static HudConfig load() {
@@ -77,6 +84,9 @@ public final class HudConfig {
 					}
 					if (config.panels == null) {
 						config.panels = new LinkedHashMap<>();
+					}
+					if (config.collapsed == null) {
+						config.collapsed = new LinkedHashSet<>();
 					}
 					for (Module module : config.modules.values()) {
 						if (module.values == null) {

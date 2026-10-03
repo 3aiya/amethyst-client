@@ -1,10 +1,11 @@
 package com.amethystclient.hud.modules;
 
+import com.amethystclient.hud.Category;
 import com.amethystclient.hud.Game;
 
 public class FpsModule extends SimpleModule {
 	public FpsModule() {
-		super("fps", "FPS", "Frames per second", true, Position.topLeft(0));
+		super("fps", "FPS", "Frames per second", Category.INFO, false, Position.topLeft(0));
 	}
 
 	@Override

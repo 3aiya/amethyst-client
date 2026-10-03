@@ -1,5 +1,6 @@
 package com.amethystclient.hud.modules;
 
+import com.amethystclient.hud.Category;
 import com.amethystclient.hud.Game;
 import com.amethystclient.hud.setting.ModeSetting;
 import java.util.ArrayDeque;
@@ -12,7 +13,7 @@ public class CpsModule extends SimpleModule {
 	private final ModeSetting buttons;
 
 	public CpsModule() {
-		super("cps", "CPS", "Clicks per second", false, Position.topLeft(51));
+		super("cps", "CPS", "Clicks per second", Category.INFO, false, Position.topLeft(51));
 		buttons = mode("buttons", "Buttons", "Both", "Left", "Both");
 	}
 

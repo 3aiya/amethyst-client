@@ -105,6 +105,31 @@ public final class Ui {
 		outline(d, x, y, w, h, r, border);
 	}
 
+	/** A left-to-right gradient, drawn one 1px column at a time (keep it narrow or short-lived). */
+	public static void hGradient(Draw d, int x, int y, int w, int h, int from, int to) {
+		for (int i = 0; i < w; i++) {
+			d.fill(x + i, y, x + i + 1, y + h, AmethystTheme.lerp(from, to, w > 1 ? (float) i / (w - 1) : 0f));
+		}
+	}
+
+	/** A top-to-bottom gradient, drawn one 1px row at a time. */
+	public static void vGradient(Draw d, int x, int y, int w, int h, int from, int to) {
+		for (int i = 0; i < h; i++) {
+			d.fill(x, y + i, x + w, y + i + 1, AmethystTheme.lerp(from, to, h > 1 ? (float) i / (h - 1) : 0f));
+		}
+	}
+
+	/**
+	 * A soft drop shadow behind a rounded rect: {@code size} stacked, growing translucent rects,
+	 * shifted 2px down. {@code strength} is the darkness right under the edge.
+	 */
+	public static void shadow(Draw d, int x, int y, int w, int h, int r, int size, float strength) {
+		int color = AmethystTheme.withAlpha(0xFF000000, strength / size);
+		for (int i = size; i >= 1; i--) {
+			round(d, x - i, y - i + 2, w + i * 2, h + i * 2, r + i, color);
+		}
+	}
+
 	/** Card (§5.3): bg-card, 1px border; on hover bg-card-hover and an accent-50% border. */
 	public static void card(Draw d, AmethystTheme t, int x, int y, int w, int h, boolean hovered) {
 		box(d, x, y, w, h, RADIUS_CARD,

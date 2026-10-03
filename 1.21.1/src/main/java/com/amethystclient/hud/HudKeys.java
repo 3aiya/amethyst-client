@@ -7,7 +7,10 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
-/** The "Open HUD settings" key (Right Shift by default, rebindable in Controls). */
+/**
+ * The "Open HUD settings" key (Right Shift by default, rebindable in Controls), and the per-tick
+ * module update (module keybinds, {@link ClientModule#tick}).
+ */
 public final class HudKeys {
 	private HudKeys() {
 	}
@@ -20,6 +23,7 @@ public final class HudKeys {
 				"key.category.amethystclient.main"));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			Modules.tick();
 			while (open.wasPressed()) {
 				if (client.player != null && client.currentScreen == null) {
 					PageScreen.open(new HudSettingsPage());

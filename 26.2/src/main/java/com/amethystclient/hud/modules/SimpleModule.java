@@ -1,5 +1,6 @@
 package com.amethystclient.hud.modules;
 
+import com.amethystclient.hud.Category;
 import com.amethystclient.hud.HudModule;
 import com.amethystclient.hud.setting.BoolSetting;
 import com.amethystclient.ui.AmethystTheme;
@@ -10,8 +11,9 @@ import com.amethystclient.ui.Ui;
 public abstract class SimpleModule extends HudModule {
 	private final BoolSetting showLabel;
 
-	protected SimpleModule(String id, String name, String description, boolean enabledByDefault, Position defaultPosition) {
-		super(id, name, description, enabledByDefault, defaultPosition);
+	protected SimpleModule(String id, String name, String description, Category category, boolean enabledByDefault,
+			Position defaultPosition) {
+		super(id, name, description, category, enabledByDefault, defaultPosition);
 		showLabel = bool("label", "Show label", true);
 	}
 

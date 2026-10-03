@@ -1,5 +1,6 @@
 package com.amethystclient.hud.modules;
 
+import com.amethystclient.hud.Category;
 import com.amethystclient.hud.Game;
 import com.amethystclient.hud.HudModule;
 import com.amethystclient.hud.setting.BoolSetting;
@@ -22,7 +23,7 @@ public class KeystrokesModule extends HudModule {
 	private final SliderSetting size;
 
 	public KeystrokesModule() {
-		super("keystrokes", "Keystrokes", "Movement keys and clicks", false, new Position(0, 1, MARGIN, -MARGIN));
+		super("keystrokes", "Keystrokes", "Movement keys and clicks", Category.PLAYER, false, new Position(0, 1, MARGIN, -MARGIN));
 		for (Game.Key key : Game.Key.values()) {
 			fades.put(key, new Motion(0f, 80));
 		}

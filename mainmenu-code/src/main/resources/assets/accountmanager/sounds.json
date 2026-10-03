@@ -1,7 +1,0 @@
-{
-  "gui.main_menu_click": {
-    "sounds": [
-      "accountmanager:gui/main_menu_click"
-    ]
-  }
-}

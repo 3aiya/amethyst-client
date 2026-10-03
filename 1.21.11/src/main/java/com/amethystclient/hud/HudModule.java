@@ -1,57 +1,36 @@
 package com.amethystclient.hud;
 
-import com.amethystclient.hud.setting.BoolSetting;
-import com.amethystclient.hud.setting.ModeSetting;
-import com.amethystclient.hud.setting.Setting;
-import com.amethystclient.hud.setting.SliderSetting;
 import com.amethystclient.ui.AmethystTheme;
 import com.amethystclient.ui.Draw;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.DoubleFunction;
 
 /**
- * One HUD element. It's pinned to a point on screen (a corner, an edge's middle or the centre) with
- * a pixel offset, so it stays in place relative to that point when the window or GUI scale changes.
+ * A module that draws on the HUD. It's pinned to a point on screen (a corner, an edge's middle or
+ * the centre) with a pixel offset, so it stays in place relative to that point when the window or
+ * GUI scale changes. Enabled = shown.
  */
-public abstract class HudModule {
+public abstract class HudModule extends ClientModule {
 	/** Gap between a module and the screen edge at the default positions. */
 	public static final int MARGIN = 4;
 
 	/** See {@link HudConfig.Module}. */
 	public record Position(double anchorX, double anchorY, int offsetX, int offsetY) {
+		public static final Position NONE = new Position(0, 0, 0, 0);
+
 		public static Position topLeft(int offsetY) {
 			return new Position(0, 0, MARGIN, MARGIN + offsetY);
 		}
 	}
 
-	public final String id;
-	public final String name;
-	public final String description;
-	final boolean enabledByDefault;
 	final Position defaultPosition;
-
-	/** Shown under the module when it's expanded in the HUD settings. */
-	public final List<Setting> settingsList = new ArrayList<>();
 
 	/** Size from the last {@link #measure} call, in HUD (scaled) pixels. */
 	public int width;
 	public int height;
 
-	protected HudModule(String id, String name, String description, boolean enabledByDefault, Position defaultPosition) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.enabledByDefault = enabledByDefault;
+	protected HudModule(String id, String name, String description, Category category, boolean enabledByDefault,
+			Position defaultPosition) {
+		super(id, name, description, category, enabledByDefault);
 		this.defaultPosition = defaultPosition;
-	}
-
-	public HudConfig.Module settings() {
-		return HudConfig.get().module(this);
-	}
-
-	public boolean enabled() {
-		return settings().enabled;
 	}
 
 	/**
@@ -91,33 +70,6 @@ public abstract class HudModule {
 
 	public void resetPosition() {
 		settings().set(defaultPosition);
-	}
-
-	// ---- settings, saved in this module's config values ----
-
-	protected BoolSetting bool(String key, String name, boolean defaultValue) {
-		BoolSetting setting = new BoolSetting(name,
-				() -> settings().values.get(key) instanceof Boolean b ? b : defaultValue,
-				value -> settings().values.put(key, value));
-		settingsList.add(setting);
-		return setting;
-	}
-
-	protected SliderSetting slider(String key, String name, double min, double max, double step, double defaultValue,
-			DoubleFunction<String> format) {
-		SliderSetting setting = new SliderSetting(name, min, max, step,
-				() -> settings().values.get(key) instanceof Number n ? Math.clamp(n.doubleValue(), min, max) : defaultValue,
-				value -> settings().values.put(key, value), format);
-		settingsList.add(setting);
-		return setting;
-	}
-
-	protected ModeSetting mode(String key, String name, String defaultValue, String... options) {
-		ModeSetting setting = new ModeSetting(name, List.of(options),
-				() -> settings().values.get(key) instanceof String s ? s : defaultValue,
-				value -> settings().values.put(key, value));
-		settingsList.add(setting);
-		return setting;
 	}
 
 	protected static float backgroundAlpha() {
