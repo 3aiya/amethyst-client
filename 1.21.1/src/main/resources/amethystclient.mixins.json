@@ -9,7 +9,10 @@
 		"InGameHudMixin",
 		"MinecraftAccessor",
 		"MinecraftClientMixin",
-		"ResourcePackManagerMixin"
+		"MultiplayerScreenMixin",
+		"ResourcePackManagerMixin",
+		"ServerEntryMixin",
+		"ServerListMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

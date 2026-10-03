@@ -7,9 +7,12 @@
 		"ClientCommonPacketListenerImplAccessor",
 		"ClientCommonPacketListenerImplMixin",
 		"HudMixin",
+		"JoinMultiplayerScreenMixin",
 		"MinecraftAccessor",
 		"MinecraftMixin",
-		"PackRepositoryMixin"
+		"OnlineServerEntryMixin",
+		"PackRepositoryMixin",
+		"ServerListMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
