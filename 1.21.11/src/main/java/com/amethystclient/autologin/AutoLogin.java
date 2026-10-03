@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -236,6 +237,15 @@ public final class AutoLogin {
 		}
 	}
 
+	/** Saves passwords for accounts made by the account generator (username -> password). */
+	public static void rememberPasswords(Map<String, String> byUsername) {
+		if (byUsername.isEmpty()) {
+			return;
+		}
+		passwords.putAll(byUsername);
+		store();
+	}
+
 	private static void forget(MinecraftClient client) {
 		String username = client.getSession().getUsername();
 		if (passwords.remove(username) != null) {
@@ -291,7 +301,8 @@ public final class AutoLogin {
 		}
 	}
 
-	private static void store() {
+	// Also called from the account generator's background thread.
+	private static synchronized void store() {
 		try {
 			Files.createDirectories(FILE.getParent());
 			try (Writer writer = Files.newBufferedWriter(FILE, StandardCharsets.UTF_8)) {

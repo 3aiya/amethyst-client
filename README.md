@@ -48,6 +48,9 @@ even when the pack hasn't changed since yesterday.
   - A damaged or missing cache is detected and simply downloaded again.
   - If anything unusual happens, the mod steps aside and Minecraft's normal behaviour takes over.
 - **Zero setup.** No config screen, no settings. Install it and play.
+- **Account manager.** The **Accounts** button on the multiplayer screen adds Microsoft, cracked,
+  session-token and TheAltening accounts and switches between them without restarting the game.
+  Tokens are saved encrypted, and accounts saved in Meteor Client are imported automatically.
 
 ## 📥 Download
 

@@ -7,6 +7,7 @@
 		"ClientCommonPacketListenerImplAccessor",
 		"ClientCommonPacketListenerImplMixin",
 		"GuiMixin",
+		"MinecraftAccessor",
 		"MinecraftMixin",
 		"PackRepositoryMixin"
 	],

@@ -1,5 +1,6 @@
 package com.amethystclient;
 
+import com.amethystclient.accounts.Accounts;
 import com.amethystclient.autologin.AutoLogin;
 import com.amethystclient.packcache.ServerPackManager;
 import com.amethystclient.presence.PresenceTracker;
@@ -25,6 +26,9 @@ public class AmethystClient implements ClientModInitializer {
 
 		// Answers the auth plugin's login/register prompt with the saved password.
 		AutoLogin.register();
+
+		// The account manager, opened from the multiplayer screen.
+		Accounts.register();
 
 		// When the play phase starts, make sure the active cached pack belongs to this server.
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
