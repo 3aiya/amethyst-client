@@ -1,10 +1,13 @@
 package com.amethystclient.mixin;
 
 import com.amethystclient.AmethystServers;
+import com.amethystclient.hud.AmethystHud;
 import com.amethystclient.scoreboard.StyledScoreboard;
+import com.amethystclient.ui.Draw;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,5 +26,13 @@ public abstract class InGameHudMixin {
 			StyledScoreboard.render(context, objective);
 			ci.cancel();
 		}
+	}
+
+	/** The Amethyst HUD modules, on top of the vanilla HUD. */
+	@Inject(
+			method = "render(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V",
+			at = @At("TAIL"))
+	private void amethystclient$hud(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+		AmethystHud.render(new Draw(context));
 	}
 }

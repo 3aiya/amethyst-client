@@ -1,7 +1,10 @@
 package com.amethystclient.mixin;
 
 import com.amethystclient.AmethystServers;
+import com.amethystclient.hud.AmethystHud;
 import com.amethystclient.scoreboard.StyledScoreboard;
+import com.amethystclient.ui.Draw;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -20,5 +23,11 @@ public abstract class GuiMixin {
 			StyledScoreboard.extract(graphics, objective);
 			ci.cancel();
 		}
+	}
+
+	/** The Amethyst HUD modules, on top of the vanilla HUD. */
+	@Inject(method = "extractRenderState", at = @At("TAIL"))
+	private void amethystclient$hud(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+		AmethystHud.render(new Draw(graphics));
 	}
 }
