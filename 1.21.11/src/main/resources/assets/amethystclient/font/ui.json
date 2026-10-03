@@ -1,6 +1,20 @@
 {
 	"providers": [
 		{
+			"type": "bitmap",
+			"file": "amethystclient:font/icons.png",
+			"height": 8,
+			"ascent": 7,
+			"chars": [""]
+		},
+		{
+			"type": "bitmap",
+			"file": "amethystclient:font/icons_small.png",
+			"height": 8,
+			"ascent": 7,
+			"chars": [""]
+		},
+		{
 			"type": "ttf",
 			"file": "amethystclient:quicksand.ttf",
 			"size": 10.0,

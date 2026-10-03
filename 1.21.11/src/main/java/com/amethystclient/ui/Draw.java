@@ -1,5 +1,7 @@
 package com.amethystclient.ui;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -15,6 +17,8 @@ import net.minecraft.util.Identifier;
 public final class Draw {
 	/** The UI font (Quicksand, see assets/amethystclient/font/ui.json). */
 	private static final StyleSpriteSource UI_FONT = new StyleSpriteSource.Font(Identifier.of("amethystclient", "ui"));
+	/** The other fonts in assets/amethystclient/font, by name (e.g. "lexend_20"). */
+	private static final Map<String, StyleSpriteSource> SHARP_FONTS = new HashMap<>();
 
 	public final DrawContext graphics;
 	private final TextRenderer font = MinecraftClient.getInstance().textRenderer;
@@ -30,6 +34,11 @@ public final class Draw {
 
 	public int height() {
 		return graphics.getScaledWindowHeight();
+	}
+
+	/** Screen pixels per GUI pixel. Drawing inside {@code scale(1 / guiScale())} works in screen pixels. */
+	public float guiScale() {
+		return (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
 	}
 
 	// ---- shapes ----
@@ -56,7 +65,28 @@ public final class Draw {
 	}
 
 	private static Text styled(String text) {
-		return Text.literal(text).styled(style -> style.withFont(UI_FONT));
+		return styled(text, UI_FONT);
+	}
+
+	private static Text styled(String text, StyleSpriteSource uiFont) {
+		return Text.literal(text).styled(style -> style.withFont(uiFont));
+	}
+
+	/** Like {@link #text}, in another font from assets/amethystclient/font (e.g. "lexend_20"). */
+	public void text(String text, int x, int y, int color, String fontName) {
+		color = apply(color);
+		if (color >>> 24 >= 8) {
+			StyleSpriteSource uiFont = font(fontName);
+			graphics.drawText(font, styled(text, uiFont), x, y, color, false);
+		}
+	}
+
+	public int textWidth(String text, String fontName) {
+		return font.getWidth(styled(text, font(fontName)));
+	}
+
+	private static StyleSpriteSource font(String name) {
+		return SHARP_FONTS.computeIfAbsent(name, n -> new StyleSpriteSource.Font(Identifier.of("amethystclient", n)));
 	}
 
 	public int lineHeight() {

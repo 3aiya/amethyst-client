@@ -16,7 +16,7 @@ public class WatermarkModule extends HudModule {
 	private final BoolSetting fps;
 
 	public WatermarkModule() {
-		super("watermark", "Watermark", "The client's name on screen", Category.CLIENT, false,
+		super("watermark", "Watermark", "The client's name on screen", Category.RENDER, false,
 				new Position(0.5, 0, 0, MARGIN));
 		background = bool("background", "Background", true);
 		fps = bool("fps", "Show FPS", false);

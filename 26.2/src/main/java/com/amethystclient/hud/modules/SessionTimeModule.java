@@ -8,7 +8,7 @@ public class SessionTimeModule extends SimpleModule {
 	private long joinedAt = System.currentTimeMillis();
 
 	public SessionTimeModule() {
-		super("session", "Session Time", "Time since you joined this world or server", Category.INFO, false,
+		super("session", "Session Time", "Time since you joined this world or server", Category.MISC, false,
 				Position.topLeft(102));
 	}
 

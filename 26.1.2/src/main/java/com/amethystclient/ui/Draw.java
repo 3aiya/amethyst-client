@@ -1,5 +1,7 @@
 package com.amethystclient.ui;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,6 +17,8 @@ import net.minecraft.resources.Identifier;
 public final class Draw {
 	/** The UI font (Quicksand, see assets/amethystclient/font/ui.json). */
 	private static final FontDescription UI_FONT = new FontDescription.Resource(Identifier.fromNamespaceAndPath("amethystclient", "ui"));
+	/** The other fonts in assets/amethystclient/font, by name (e.g. "lexend_20"). */
+	private static final Map<String, FontDescription> SHARP_FONTS = new HashMap<>();
 
 	public final GuiGraphicsExtractor graphics;
 	private final Font font = Minecraft.getInstance().font;
@@ -30,6 +34,11 @@ public final class Draw {
 
 	public int height() {
 		return graphics.guiHeight();
+	}
+
+	/** Screen pixels per GUI pixel. Drawing inside {@code scale(1 / guiScale())} works in screen pixels. */
+	public float guiScale() {
+		return (float) Minecraft.getInstance().getWindow().getGuiScale();
 	}
 
 	// ---- shapes ----
@@ -56,7 +65,28 @@ public final class Draw {
 	}
 
 	private static Component styled(String text) {
-		return Component.literal(text).withStyle(style -> style.withFont(UI_FONT));
+		return styled(text, UI_FONT);
+	}
+
+	private static Component styled(String text, FontDescription uiFont) {
+		return Component.literal(text).withStyle(style -> style.withFont(uiFont));
+	}
+
+	/** Like {@link #text}, in another font from assets/amethystclient/font (e.g. "lexend_20"). */
+	public void text(String text, int x, int y, int color, String fontName) {
+		color = apply(color);
+		if (color >>> 24 >= 8) {
+			FontDescription uiFont = font(fontName);
+			graphics.text(font, styled(text, uiFont), x, y, color, false);
+		}
+	}
+
+	public int textWidth(String text, String fontName) {
+		return font.width(styled(text, font(fontName)));
+	}
+
+	private static FontDescription font(String name) {
+		return SHARP_FONTS.computeIfAbsent(name, n -> new FontDescription.Resource(Identifier.fromNamespaceAndPath("amethystclient", n)));
 	}
 
 	public int lineHeight() {

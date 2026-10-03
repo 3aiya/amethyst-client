@@ -13,7 +13,7 @@ public class ClockModule extends SimpleModule {
 	private final BoolSetting seconds;
 
 	public ClockModule() {
-		super("clock", "Clock", "Your computer's time", Category.INFO, false, Position.topLeft(68));
+		super("clock", "Clock", "Your computer's time", Category.MISC, false, Position.topLeft(68));
 		format = mode("format", "Format", "24h", "24h", "12h");
 		seconds = bool("seconds", "Seconds", false);
 	}

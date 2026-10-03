@@ -28,18 +28,19 @@ public final class Modules {
 			new PingModule(),
 			new CpsModule(),
 			new MemoryModule(),
-			new ClockModule(),
-			new SessionTimeModule(),
 			// World
 			new CoordsModule(),
 			new DirectionModule(),
 			new SpeedModule(),
+			// Render
+			new WatermarkModule(),
+			new ModuleListModule(),
 			// Player
 			new ArmorModule(),
 			new KeystrokesModule(),
-			// Client
-			new WatermarkModule(),
-			new ModuleListModule());
+			// Misc
+			new ClockModule(),
+			new SessionTimeModule());
 
 	/** The modules that draw on the HUD. */
 	public static final List<HudModule> HUD = ALL.stream()

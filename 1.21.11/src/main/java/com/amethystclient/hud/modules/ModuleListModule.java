@@ -32,7 +32,7 @@ public class ModuleListModule extends HudModule {
 	private final List<ClientModule> shown = new ArrayList<>();
 
 	public ModuleListModule() {
-		super("module_list", "Module List", "Lists the modules you have on", Category.CLIENT, false,
+		super("module_list", "Module List", "Lists the modules you have on", Category.RENDER, false,
 				new Position(1, 0, -MARGIN, MARGIN));
 		sort = mode("sort", "Sort by", "Length", "Length", "Name", "Category");
 		color = mode("color", "Colour", "Gradient", "Gradient", "Accent", "White");

@@ -1,5 +1,8 @@
 package com.amethystclient.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Shared drawing building blocks from the UI guide (§4–§6): rounded rects, cards, glows, section
  * titles, info chips. Radii are in GUI pixels (about half the launcher's CSS pixels).
@@ -73,6 +76,52 @@ public final class Ui {
 		d.pop();
 	}
 
+	/** The sizes each font family comes in: font/<family>_<oversample×10>.json. */
+	private static final int[] SHARP_SIZES = {10, 13, 16, 20, 25, 30, 40};
+
+	/** The size of {@code family} rasterized closest to {@code scale} pixels per unit. */
+	private static String sharpFont(String family, float scale) {
+		int wanted = Math.round(scale * 10);
+		int best = SHARP_SIZES[0];
+		for (int size : SHARP_SIZES) {
+			if (Math.abs(size - wanted) < Math.abs(best - wanted)) {
+				best = size;
+			}
+		}
+		return family + "_" + best;
+	}
+
+	/**
+	 * Text in a font family from assets/amethystclient/font ("lexend", "inter_medium", ...), for
+	 * drawing in screen pixels (1 unit = 1 pixel). Uses the size rasterized closest to
+	 * {@code scale}, so the glyphs aren't shrunk from a much bigger bitmap and stay sharp.
+	 */
+	public static void sharpText(Draw d, String family, String text, float x, float y, int color, float scale) {
+		d.push();
+		d.translate(x, y);
+		d.scale(scale);
+		d.text(text, 0, 0, color, sharpFont(family, scale));
+		d.pop();
+	}
+
+	/** Width of {@link #sharpText}. */
+	public static int sharpWidth(Draw d, String family, String text, float scale) {
+		return (int) Math.ceil(d.textWidth(text, sharpFont(family, scale)) * scale);
+	}
+
+	/** {@code text} cut down with "..." so its {@link #sharpText} fits in {@code maxWidth} pixels. */
+	public static String sharpClip(Draw d, String family, String text, int maxWidth, float scale) {
+		if (sharpWidth(d, family, text, scale) <= maxWidth) {
+			return text;
+		}
+		String dots = "...";
+		int end = text.length();
+		while (end > 0 && sharpWidth(d, family, text.substring(0, end) + dots, scale) > maxWidth) {
+			end--;
+		}
+		return text.substring(0, end) + dots;
+	}
+
 	public static int width(Draw d, String text, float scale) {
 		return (int) Math.ceil(d.textWidth(text) * scale);
 	}
@@ -103,6 +152,96 @@ public final class Ui {
 	public static void box(Draw d, int x, int y, int w, int h, int r, int fill, int border) {
 		round(d, x + 1, y + 1, w - 2, h - 2, Math.max(0, r - 1), fill);
 		outline(d, x, y, w, h, r, border);
+	}
+
+	// ---- anti-aliased shapes (for drawing in screen pixels) ----
+
+	private static final Map<Integer, float[][]> CORNERS = new HashMap<>();
+
+	/**
+	 * How much of each pixel of a top-left corner of radius {@code r} the arc covers (4×4
+	 * samples): {@code [row][column]}, 0–1.
+	 */
+	private static float[][] corner(int r) {
+		return CORNERS.computeIfAbsent(r, radius -> {
+			float[][] coverage = new float[radius][radius];
+			int n = 4;
+			for (int i = 0; i < radius; i++) {
+				for (int j = 0; j < radius; j++) {
+					int inside = 0;
+					for (int a = 0; a < n; a++) {
+						for (int b = 0; b < n; b++) {
+							double dx = radius - (j + (a + 0.5) / n);
+							double dy = radius - (i + (b + 0.5) / n);
+							if (dx * dx + dy * dy <= radius * radius) {
+								inside++;
+							}
+						}
+					}
+					coverage[i][j] = inside / (float) (n * n);
+				}
+			}
+			return coverage;
+		});
+	}
+
+	/**
+	 * A rounded rect with anti-aliased corners: edge pixels get the part of the colour's alpha the
+	 * arc covers. Meant for screen-pixel drawing, where 1 unit is 1 pixel. Each pixel is drawn once.
+	 */
+	public static void smooth(Draw d, int x, int y, int w, int h, int r, int color) {
+		smooth(d, x, y, w, h, r, color, true, true);
+	}
+
+	/** Like {@link #smooth}, with only the top and/or bottom corners rounded. */
+	public static void smooth(Draw d, int x, int y, int w, int h, int r, int color, boolean top, boolean bottom) {
+		r = Math.min(r, Math.min(w, h) / 2);
+		if (r <= 0) {
+			d.fill(x, y, x + w, y + h, color);
+			return;
+		}
+		float[][] coverage = corner(r);
+		for (int i = 0; i < r; i++) {
+			if (top) {
+				smoothRow(d, coverage[i], x, y + i, w, color);
+			}
+			if (bottom) {
+				smoothRow(d, coverage[i], x, y + h - 1 - i, w, color);
+			}
+		}
+		d.fill(x, y + (top ? r : 0), x + w, y + h - (bottom ? r : 0), color);
+	}
+
+	private static void smoothRow(Draw d, float[] coverage, int x, int y, int w, int color) {
+		int full = coverage.length;
+		for (int j = 0; j < coverage.length; j++) {
+			if (coverage[j] >= 0.999f) {
+				full = j;
+				break;
+			}
+		}
+		int alpha = color >>> 24;
+		for (int j = 0; j < full; j++) {
+			if (coverage[j] > 0.02f) {
+				int c = (Math.round(alpha * coverage[j]) << 24) | (color & 0x00FFFFFF);
+				d.fill(x + j, y, x + j + 1, y + 1, c);
+				d.fill(x + w - j - 1, y, x + w - j, y + 1, c);
+			}
+		}
+		d.fill(x + full, y, x + w - full, y + 1, color);
+	}
+
+	/** An anti-aliased filled circle of diameter {@code size}. */
+	public static void circle(Draw d, int x, int y, int size, int color) {
+		smooth(d, x, y, size, size, size / 2, color);
+	}
+
+	/** A soft shadow under a {@link #smooth} rect, spread over {@code size} pixels. */
+	public static void smoothShadow(Draw d, int x, int y, int w, int h, int r, int size, float strength) {
+		int color = AmethystTheme.withAlpha(0xFF000000, strength / size);
+		for (int i = size; i >= 1; i--) {
+			smooth(d, x - i, y - i + size / 2, w + i * 2, h + i * 2, r + i, color);
+		}
 	}
 
 	/** A left-to-right gradient, drawn one 1px column at a time (keep it narrow or short-lived). */

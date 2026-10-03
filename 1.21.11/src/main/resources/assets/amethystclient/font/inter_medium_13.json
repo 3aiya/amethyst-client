@@ -1,0 +1,15 @@
+{
+	"providers": [
+		{
+			"type": "ttf",
+			"file": "amethystclient:inter-medium.ttf",
+			"size": 10.0,
+			"oversample": 1.3,
+			"shift": [0.0, 0.5]
+		},
+		{
+			"type": "reference",
+			"id": "minecraft:include/default"
+		}
+	]
+}

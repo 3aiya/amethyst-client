@@ -8,9 +8,7 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +28,6 @@ public final class HudConfig {
 	public double scale = 1.0;
 	public boolean reduceMotion;
 	public Map<String, Module> modules = new LinkedHashMap<>();
-	/** Where each settings panel was dragged to: {x, y} in GUI pixels. */
-	public Map<String, int[]> panels = new LinkedHashMap<>();
-	/** ClickGUI columns folded up to their header (right click on the header). */
-	public Set<String> collapsed = new LinkedHashSet<>();
 
 	public static final class Module {
 		public boolean enabled;
@@ -81,12 +75,6 @@ public final class HudConfig {
 				if (config != null) {
 					if (config.modules == null) {
 						config.modules = new LinkedHashMap<>();
-					}
-					if (config.panels == null) {
-						config.panels = new LinkedHashMap<>();
-					}
-					if (config.collapsed == null) {
-						config.collapsed = new LinkedHashSet<>();
 					}
 					for (Module module : config.modules.values()) {
 						if (module.values == null) {
