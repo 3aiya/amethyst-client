@@ -13,7 +13,7 @@ public final class AmethystServers {
 	public static final String DISPLAY_ADDRESS = "mc.amethystcommunity.net";
 
 	/** The name of the server pinned to the top of the multiplayer list. */
-	public static final String PINNED_NAME = "Amethyst Community";
+	public static final String PINNED_NAME = "AMETHYST COMMUNITY";
 
 	/**
 	 * A server matches when its address is one of these hosts (the port is ignored) or, for a

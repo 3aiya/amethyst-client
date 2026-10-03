@@ -21,21 +21,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * The pinned Amethyst server's row: an amethyst tint, a styled name with an "OFFICIAL" badge, and
- * no move arrows. Rows can't be moved above it either.
+ * The pinned Amethyst server's row: its name centred on the card in amethyst, and no move arrows.
+ * Rows can't be moved above it either.
  */
 @Mixin(ServerSelectionList.OnlineServerEntry.class)
 public abstract class OnlineServerEntryMixin {
 	@Unique
-	private static final int BACKGROUND_TOP = 0x449D4EDD;
-	@Unique
-	private static final int BACKGROUND_BOTTOM = 0x149D4EDD;
-	@Unique
-	private static final int NAME_COLOR = 0xD8B4FE;
-	@Unique
-	private static final int BADGE_COLOR = 0xFF7B2CBF;
-	@Unique
-	private static final Component BADGE = Component.literal("OFFICIAL");
+	private static final int NAME_COLOR = 0xC77DFF;
 
 	@Shadow
 	@Final
@@ -50,16 +42,6 @@ public abstract class OnlineServerEntryMixin {
 		return AmethystServers.isPinned(screen.getServers(), serverData);
 	}
 
-	@Inject(method = "extractContent", at = @At("HEAD"))
-	private void amethystclient$drawPinnedBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered,
-			float a, CallbackInfo ci) {
-		if (amethystclient$isPinned()) {
-			ServerSelectionList.OnlineServerEntry self = (ServerSelectionList.OnlineServerEntry) (Object) this;
-			graphics.fillGradient(self.getContentX() - 1, self.getContentY() - 1, self.getContentRight() + 1,
-					self.getContentBottom() + 1, BACKGROUND_TOP, BACKGROUND_BOTTOM);
-		}
-	}
-
 	@WrapOperation(method = "extractContent", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;III)V"))
 	private void amethystclient$drawPinnedName(GuiGraphicsExtractor graphics, Font font, String name, int x, int y,
@@ -69,10 +51,8 @@ public abstract class OnlineServerEntryMixin {
 			return;
 		}
 		Component styled = Component.literal(name).withStyle(style -> style.withBold(true).withColor(NAME_COLOR));
-		graphics.text(font, styled, x, y, color);
-		int badgeX = x + font.width(styled) + 6;
-		graphics.fill(badgeX, y - 1, badgeX + font.width(BADGE) + 6, y + 9, BADGE_COLOR);
-		graphics.text(font, BADGE, badgeX + 3, y, 0xFFFFFFFF, false);
+		int centerX = ((ServerSelectionList.OnlineServerEntry) (Object) this).getContentXMiddle();
+		graphics.text(font, styled, centerX - font.width(styled) / 2, y, color);
 	}
 
 	@WrapWithCondition(method = "extractContent", at = @At(value = "INVOKE",

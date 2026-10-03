@@ -21,21 +21,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * The pinned Amethyst server's row: an amethyst tint, a styled name with an "OFFICIAL" badge, and
- * no move arrows. Rows can't be moved above it either.
+ * The pinned Amethyst server's row: its name centred on the card in amethyst, and no move arrows.
+ * Rows can't be moved above it either.
  */
 @Mixin(MultiplayerServerListWidget.ServerEntry.class)
 public abstract class ServerEntryMixin {
 	@Unique
-	private static final int BACKGROUND_TOP = 0x449D4EDD;
-	@Unique
-	private static final int BACKGROUND_BOTTOM = 0x149D4EDD;
-	@Unique
-	private static final int NAME_COLOR = 0xD8B4FE;
-	@Unique
-	private static final int BADGE_COLOR = 0xFF7B2CBF;
-	@Unique
-	private static final Text BADGE = Text.literal("OFFICIAL");
+	private static final int NAME_COLOR = 0xC77DFF;
 
 	@Shadow
 	@Final
@@ -50,16 +42,6 @@ public abstract class ServerEntryMixin {
 		return AmethystServers.isPinned(screen.getServerList(), server);
 	}
 
-	@Inject(method = "render", at = @At("HEAD"))
-	private void amethystclient$drawPinnedBackground(DrawContext context, int mouseX, int mouseY, boolean hovered,
-			float deltaTicks, CallbackInfo ci) {
-		if (amethystclient$isPinned()) {
-			MultiplayerServerListWidget.ServerEntry self = (MultiplayerServerListWidget.ServerEntry) (Object) this;
-			context.fillGradient(self.getContentX() - 1, self.getContentY() - 1, self.getContentRightEnd() + 1,
-					self.getContentBottomEnd() + 1, BACKGROUND_TOP, BACKGROUND_BOTTOM);
-		}
-	}
-
 	@WrapOperation(method = "render", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"))
 	private void amethystclient$drawPinnedName(DrawContext context, TextRenderer textRenderer, String name, int x, int y,
@@ -69,10 +51,8 @@ public abstract class ServerEntryMixin {
 			return;
 		}
 		Text styled = Text.literal(name).styled(style -> style.withBold(true).withColor(NAME_COLOR));
-		context.drawTextWithShadow(textRenderer, styled, x, y, color);
-		int badgeX = x + textRenderer.getWidth(styled) + 6;
-		context.fill(badgeX, y - 1, badgeX + textRenderer.getWidth(BADGE) + 6, y + 9, BADGE_COLOR);
-		context.drawText(textRenderer, BADGE, badgeX + 3, y, 0xFFFFFFFF, false);
+		int centerX = ((MultiplayerServerListWidget.ServerEntry) (Object) this).getContentMiddleX();
+		context.drawTextWithShadow(textRenderer, styled, centerX - textRenderer.getWidth(styled) / 2, y, color);
 	}
 
 	@WrapWithCondition(method = "render", at = @At(value = "INVOKE",
