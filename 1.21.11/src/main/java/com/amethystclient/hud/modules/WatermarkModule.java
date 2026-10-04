@@ -33,9 +33,9 @@ public class WatermarkModule extends HudModule {
 		super("server_watermark", "Watermark", "The Amethyst Community logo, on Amethyst servers only",
 				Category.RENDER, true, new Position(1, 1, -MARGIN, -MARGIN));
 		style = mode("style", "Style", "Logo", "Logo", "Text");
-		size = slider("size", "Size", 40, 200, 5, 80, v -> (int) v + "px")
+		size = slider("size", "Size", 40, 200, 5, 65, v -> (int) v + "px")
 				.showWhen(this::logo);
-		opacity = slider("opacity", "Opacity", 0.1, 1, 0.05, 0.85, v -> Math.round(v * 100) + "%")
+		opacity = slider("opacity", "Opacity", 0.1, 1, 0.05, 1, v -> Math.round(v * 100) + "%")
 				.showWhen(this::logo);
 		background = bool("background", "Background", true).showWhen(() -> !logo());
 		fps = bool("fps", "Show FPS", false).showWhen(() -> !logo());
