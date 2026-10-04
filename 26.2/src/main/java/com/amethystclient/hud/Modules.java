@@ -21,6 +21,7 @@ import com.amethystclient.hud.modules.SessionTimeModule;
 import com.amethystclient.hud.modules.SpeedModule;
 import com.amethystclient.hud.modules.StyledScoreboardModule;
 import com.amethystclient.hud.modules.WatermarkModule;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,12 @@ public final class Modules {
 	public static final List<HudModule> HUD = ALL.stream()
 			.filter(HudModule.class::isInstance)
 			.map(HudModule.class::cast)
+			.toList();
+
+	/** The modules that start in the top-left stack, top to bottom. */
+	public static final List<HudModule> STACK = HUD.stream()
+			.filter(module -> module.defaultPosition.isStacked())
+			.sorted(Comparator.comparingInt(module -> module.defaultPosition.stack()))
 			.toList();
 
 	/** Which bound keys were down last tick, so a held key toggles only once. */

@@ -4,6 +4,8 @@ import com.amethystclient.hud.modules.CpsModule;
 import com.amethystclient.ui.AmethystTheme;
 import com.amethystclient.ui.Draw;
 import com.amethystclient.ui.PageScreen;
+import java.util.ArrayList;
+import java.util.List;
 
 /** The Amethyst HUD: draws the enabled modules on top of the vanilla HUD. */
 public final class AmethystHud {
@@ -28,16 +30,34 @@ public final class AmethystHud {
 		AmethystTheme theme = AmethystTheme.current();
 		d.push();
 		d.scale(scale);
+		List<HudModule> shown = new ArrayList<>();
 		for (HudModule module : Modules.HUD) {
 			if (!module.enabled()) {
 				continue;
 			}
 			module.measure(d, preview);
 			if (module.width > 0 && module.height > 0) {
-				module.render(d, theme, module.x(hudWidth), module.y(hudHeight), preview);
+				shown.add(module);
 			}
 		}
+		layoutStack(shown);
+		for (HudModule module : shown) {
+			module.render(d, theme, module.x(hudWidth), module.y(hudHeight), preview);
+		}
 		d.pop();
+	}
+
+	/** Stacks the shown, docked modules top-left in their order, so there are no gaps. */
+	private static void layoutStack(List<HudModule> shown) {
+		int y = HudModule.MARGIN;
+		for (HudModule module : Modules.STACK) {
+			if (module.docked() && shown.contains(module)) {
+				module.placeInStack(y);
+				y += module.height + HudModule.STACK_GAP;
+			} else {
+				module.leaveStack();
+			}
+		}
 	}
 
 	static float scale() {

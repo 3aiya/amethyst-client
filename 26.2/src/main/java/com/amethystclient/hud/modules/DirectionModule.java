@@ -12,7 +12,7 @@ public class DirectionModule extends SimpleModule {
 	private final BoolSetting axis;
 
 	public DirectionModule() {
-		super("direction", "Direction", "The way you're facing", Category.WORLD, false, Position.topLeft(119));
+		super("direction", "Direction", "The way you're facing", Category.WORLD, false, Position.stacked(7));
 		style = mode("style", "Style", "Full", "Full", "Short");
 		axis = bool("axis", "Show axis", true);
 	}

@@ -10,7 +10,7 @@ public class MemoryModule extends SimpleModule {
 	private final ModeSetting format;
 
 	public MemoryModule() {
-		super("memory", "Memory", "RAM used by the game", Category.INFO, false, Position.topLeft(85));
+		super("memory", "Memory", "RAM used by the game", Category.INFO, false, Position.stacked(5));
 		format = mode("format", "Show as", "Percent", "Percent", "Used / Max", "Used");
 	}
 

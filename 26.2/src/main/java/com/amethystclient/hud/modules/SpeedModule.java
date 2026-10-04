@@ -21,7 +21,7 @@ public class SpeedModule extends SimpleModule {
 	private boolean hasLast;
 
 	public SpeedModule() {
-		super("speed", "Speed", "How fast you're moving", Category.WORLD, false, Position.topLeft(136));
+		super("speed", "Speed", "How fast you're moving", Category.WORLD, false, Position.stacked(8));
 		axes = mode("axes", "Measure", "Horizontal", "Horizontal", "3D");
 		unit = mode("unit", "Unit", "b/s", "b/s", "km/h");
 	}

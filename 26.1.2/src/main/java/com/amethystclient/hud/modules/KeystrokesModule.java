@@ -23,7 +23,7 @@ public class KeystrokesModule extends HudModule {
 	private final SliderSetting size;
 
 	public KeystrokesModule() {
-		super("keystrokes", "Keystrokes", "Movement keys and clicks", Category.PLAYER, false, new Position(0, 1, MARGIN, -MARGIN));
+		super("keystrokes", "Keystrokes", "Movement keys and clicks", Category.PLAYER, false, new Position(0, 0.5, MARGIN, 0));
 		for (Game.Key key : Game.Key.values()) {
 			fades.put(key, new Motion(0f, 80));
 		}

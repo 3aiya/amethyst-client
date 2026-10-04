@@ -11,7 +11,7 @@ public class CoordsModule extends SimpleModule {
 	private final ModeSetting format;
 
 	public CoordsModule() {
-		super("coords", "Coordinates", "Position and facing", Category.WORLD, false, Position.topLeft(34));
+		super("coords", "Coordinates", "Position and facing", Category.WORLD, false, Position.stacked(2));
 		showFacing = bool("facing", "Show facing", true);
 		format = mode("format", "Format", "Whole", "Whole", "Decimal");
 	}

@@ -1,5 +1,6 @@
 package com.amethystclient.hud;
 
+import com.amethystclient.AmethystServers;
 import com.amethystclient.ui.Draw;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,11 @@ public final class Game {
 
 	public static boolean inWorld() {
 		return mc().player != null;
+	}
+
+	/** True on an Amethyst Community server (see {@link AmethystServers}). */
+	public static boolean onAmethystServer() {
+		return AmethystServers.isAmethystServer(mc());
 	}
 
 	/** True when vanilla's HUD is hidden (F1). */

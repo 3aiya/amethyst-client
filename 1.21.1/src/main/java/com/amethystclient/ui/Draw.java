@@ -1,5 +1,6 @@
 package com.amethystclient.ui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +21,8 @@ public final class Draw {
 	private static final Identifier UI_FONT = Identifier.of("amethystclient", "ui");
 	/** The other fonts in assets/amethystclient/font, by name (e.g. "lexend_20"). */
 	private static final Map<String, Identifier> SHARP_FONTS = new HashMap<>();
+	/** The textures drawn with {@link #image}, by path. */
+	private static final Map<String, Identifier> IMAGES = new HashMap<>();
 	/** The styled text of recent strings, by font, so the same text isn't rebuilt every frame. */
 	private static final Map<Identifier, Map<String, Text>> STYLED = new HashMap<>();
 
@@ -95,6 +98,28 @@ public final class Draw {
 			}
 			row = rowEnd;
 		}
+	}
+
+	/**
+	 * Draws the whole of {@code assets/amethystclient/textures/<path>.png} ({@code texW}×{@code texH}
+	 * pixels) stretched over ({@code x}, {@code y}, {@code w}×{@code h}).
+	 */
+	public void image(String path, int x, int y, int w, int h, int texW, int texH) {
+		int a = apply(0xFFFFFFFF) >>> 24;
+		if (w <= 0 || h <= 0 || a == 0) {
+			return;
+		}
+		// Textures are drawn right away, so flush the fills queued before this first.
+		graphics.draw();
+		RenderSystem.enableBlend();
+		RenderSystem.setShaderColor(1f, 1f, 1f, a / 255f);
+		graphics.drawTexture(image(path), x, y, w, h, 0, 0, texW, texH, texW, texH);
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+		RenderSystem.disableBlend();
+	}
+
+	private static Identifier image(String path) {
+		return IMAGES.computeIfAbsent(path, p -> Identifier.of("amethystclient", "textures/" + p + ".png"));
 	}
 
 	// ---- text ----

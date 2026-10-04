@@ -21,7 +21,8 @@ public class ArmorModule extends HudModule {
 	private List<Game.Item> items = List.of();
 
 	public ArmorModule() {
-		super("armor", "Armour", "Armour and held item durability", Category.PLAYER, false, new Position(1, 0.5, -MARGIN, 0));
+		super("armor", "Armour", "Armour and held item durability", Category.PLAYER, false,
+				new Position(1, 1, -MARGIN, -MARGIN));
 		held = bool("held", "Held item", true);
 		durability = bool("durability", "Durability", true);
 		durabilityFormat = mode("durability_format", "Durability as", "Percent", "Percent", "Bar")

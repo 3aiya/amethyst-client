@@ -22,6 +22,8 @@ public final class Draw {
 	private static final StyleSpriteSource UI_FONT = new StyleSpriteSource.Font(Identifier.of("amethystclient", "ui"));
 	/** The other fonts in assets/amethystclient/font, by name (e.g. "lexend_20"). */
 	private static final Map<String, StyleSpriteSource> SHARP_FONTS = new HashMap<>();
+	/** The textures drawn with {@link #image}, by path. */
+	private static final Map<String, Identifier> IMAGES = new HashMap<>();
 	/** The styled text of recent strings, by font, so the same text isn't rebuilt every frame. */
 	private static final Map<StyleSpriteSource, Map<String, Text>> STYLED = new HashMap<>();
 
@@ -87,6 +89,21 @@ public final class Draw {
 		MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(() -> "Amethyst " + mask.key, image));
 		mask.texture = id;
 		return id;
+	}
+
+	/**
+	 * Draws the whole of {@code assets/amethystclient/textures/<path>.png} ({@code texW}×{@code texH}
+	 * pixels) stretched over ({@code x}, {@code y}, {@code w}×{@code h}).
+	 */
+	public void image(String path, int x, int y, int w, int h, int texW, int texH) {
+		int color = apply(0xFFFFFFFF);
+		if (w > 0 && h > 0 && color >>> 24 != 0) {
+			graphics.drawTexture(RenderPipelines.GUI_TEXTURED, image(path), x, y, 0, 0, w, h, texW, texH, texW, texH, color);
+		}
+	}
+
+	private static Identifier image(String path) {
+		return IMAGES.computeIfAbsent(path, p -> Identifier.of("amethystclient", "textures/" + p + ".png"));
 	}
 
 	// ---- text ----

@@ -5,7 +5,7 @@ import com.amethystclient.hud.Game;
 
 public class PingModule extends SimpleModule {
 	public PingModule() {
-		super("ping", "Ping", "Your latency to the server", Category.INFO, false, Position.topLeft(17));
+		super("ping", "Ping", "Your latency to the server", Category.INFO, false, Position.stacked(1));
 	}
 
 	@Override

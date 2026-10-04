@@ -13,7 +13,7 @@ public class CpsModule extends SimpleModule {
 	private final ModeSetting buttons;
 
 	public CpsModule() {
-		super("cps", "CPS", "Clicks per second", Category.INFO, false, Position.topLeft(51));
+		super("cps", "CPS", "Clicks per second", Category.INFO, false, Position.stacked(3));
 		buttons = mode("buttons", "Buttons", "Both", "Left", "Both");
 	}
 

@@ -37,6 +37,11 @@ public final class HudConfig {
 		/** Pixel offset from that point, in HUD (scaled) pixels. */
 		public int offsetX;
 		public int offsetY;
+		/**
+		 * True while the module is in the top-left stack (see {@link HudModule.Position#stacked});
+		 * null in configs saved before the stack, then worked out from the position.
+		 */
+		public Boolean docked;
 		/** GLFW key code that toggles the module; 0 = none. */
 		public int key;
 		/** The module's own settings (booleans, numbers and mode names), by key. */
@@ -52,6 +57,7 @@ public final class HudConfig {
 			anchorY = position.anchorY();
 			offsetX = position.offsetX();
 			offsetY = position.offsetY();
+			docked = position.isStacked();
 		}
 	}
 

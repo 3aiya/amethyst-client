@@ -9,7 +9,7 @@ public class SessionTimeModule extends SimpleModule {
 
 	public SessionTimeModule() {
 		super("session", "Session Time", "Time since you joined this world or server", Category.MISC, false,
-				Position.topLeft(102));
+				Position.stacked(6));
 	}
 
 	@Override
