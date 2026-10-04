@@ -47,10 +47,15 @@ public final class DiscordPresence {
 	 */
 	public static void set(String details, String state) {
 		Activity current = desired;
-		if (current != null && current.details.equals(details) && Objects.equals(current.state, state)) {
+		if (current != null && Objects.equals(current.details, details) && Objects.equals(current.state, state)) {
 			return;
 		}
 		desired = new Activity(details, state, System.currentTimeMillis());
+	}
+
+	/** Removes the activity from the player's profile until the next {@link #set}. */
+	public static void clear() {
+		set(null, null);
 	}
 
 	private static void run() {
@@ -74,7 +79,8 @@ public final class DiscordPresence {
 			}
 
 			if (ipc == null) {
-				if (now < nextConnect) {
+				// Nothing is shown while we're not connected, so there's nothing to clear.
+				if (want.details == null || now < nextConnect) {
 					continue;
 				}
 				try {
@@ -96,7 +102,7 @@ public final class DiscordPresence {
 				continue;
 			}
 			try {
-				ipc.setActivity(toJson(want));
+				ipc.setActivity(want.details == null ? null : toJson(want));
 				sent = want;
 				lastSend = now;
 			} catch (Exception e) {

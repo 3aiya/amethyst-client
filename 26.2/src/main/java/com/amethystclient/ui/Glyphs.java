@@ -12,6 +12,7 @@ public final class Glyphs {
 	public static final String PLAYER = "";
 	public static final String GEAR = "";
 	public static final String SEARCH = "";
+	public static final String SERVER = "";
 	/** 12px cells; the rest are 24px. */
 	public static final String CHECK = "";
 	public static final String CROSS = "";

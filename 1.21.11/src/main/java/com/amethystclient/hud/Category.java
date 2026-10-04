@@ -8,6 +8,7 @@ import java.util.Locale;
  * category in this order, so adding a category here is all it takes to get a new column.
  */
 public enum Category {
+	SERVER("Server", Glyphs.SERVER),
 	INFO("Info", Glyphs.CHART),
 	WORLD("World", Glyphs.GLOBE),
 	RENDER("Render", Glyphs.CUBE),

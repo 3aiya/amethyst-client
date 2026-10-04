@@ -1,6 +1,7 @@
 package com.amethystclient.autologin;
 
 import com.amethystclient.AmethystServers;
+import com.amethystclient.hud.Modules;
 import com.amethystclient.mixin.ClientCommonPacketListenerImplAccessor;
 import java.io.IOException;
 import java.io.Reader;
@@ -85,12 +86,14 @@ public final class AutoLogin {
 		pendingScreen = null;
 	}
 
-	private static boolean onAmethystServer(Minecraft client) {
-		return AmethystServers.isAmethystServer(client) || AmethystServers.isAmethystServer(configuringServer);
+	/** The Auto Login module is on and we are connecting to, or on, an Amethyst server. */
+	private static boolean active(Minecraft client) {
+		return Modules.AUTO_LOGIN.enabled()
+				&& (AmethystServers.isAmethystServer(client) || AmethystServers.isAmethystServer(configuringServer));
 	}
 
 	private static void onScreen(Minecraft client, Screen screen, int width, int height) {
-		if (!onAmethystServer(client)) {
+		if (!active(client)) {
 			return;
 		}
 		String title = screen.getTitle().getString().toLowerCase(Locale.ROOT);
@@ -115,7 +118,7 @@ public final class AutoLogin {
 
 	private static void onChat(Component message) {
 		Minecraft client = Minecraft.getInstance();
-		if (client.player == null || !AmethystServers.isAmethystServer(client)) {
+		if (client.player == null || !Modules.AUTO_LOGIN.enabled() || !AmethystServers.isAmethystServer(client)) {
 			return;
 		}
 		String text = message.getString().toLowerCase(Locale.ROOT);
@@ -134,7 +137,7 @@ public final class AutoLogin {
 		Screen screen = pendingScreen;
 		pending = null;
 		pendingScreen = null;
-		if (!onAmethystServer(client)) {
+		if (!active(client)) {
 			return;
 		}
 

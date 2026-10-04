@@ -1,6 +1,8 @@
 package com.amethystclient.presence;
 
 import com.amethystclient.AmethystServers;
+import com.amethystclient.hud.Modules;
+import com.amethystclient.hud.modules.DiscordPresenceModule;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -38,13 +40,16 @@ public final class PresenceTracker {
 			}
 		}
 
-		if (level == null) {
+		DiscordPresenceModule presence = Modules.DISCORD_PRESENCE;
+		if (!presence.enabled()) {
+			DiscordPresence.clear();
+		} else if (level == null) {
 			DiscordPresence.set("In the menus", null);
 		} else if (client.hasSingleplayerServer()) {
 			DiscordPresence.set("Singleplayer", null);
 		} else if (amethyst) {
-			String details = mode == null ? "Amethyst Community" : "Amethyst Community - " + mode;
-			DiscordPresence.set(details, AmethystServers.DISPLAY_ADDRESS);
+			String details = mode == null || !presence.showMode() ? "Amethyst Community" : "Amethyst Community - " + mode;
+			DiscordPresence.set(details, presence.showAddress() ? AmethystServers.DISPLAY_ADDRESS : null);
 		} else {
 			// Other servers' addresses aren't ours to share.
 			DiscordPresence.set("Multiplayer", null);

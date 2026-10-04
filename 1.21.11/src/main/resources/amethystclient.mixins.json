@@ -4,6 +4,8 @@
 	"package": "com.amethystclient.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"BossBarHudMixin",
+		"ChatHudMixin",
 		"ClientCommonNetworkHandlerAccessor",
 		"ClientCommonNetworkHandlerMixin",
 		"InGameHudMixin",

@@ -19,11 +19,12 @@ import java.util.function.Supplier;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * The ClickGUI, opened with Right Shift: one fixed column per {@link Category}, centred on screen,
- * each with an icon header and a scrolling list of modules. Left click turns a module on/off (its
- * name turns accent), right click (or the dot) opens its settings: sliders, option lists,
- * check/cross switches and the keybind. Middle click binds a key straight away. Typing searches
- * every column. "Edit Layout" switches to a mode where the HUD modules can be dragged around.
+ * The ClickGUI, opened and closed with Right Shift: one fixed column per {@link Category}, centred
+ * on screen, each with an icon header and a scrolling list of modules. Left click turns a module
+ * on/off (its name turns accent), right click (or the dot) opens its settings: sliders, option
+ * lists, check/cross switches and the keybind. Middle click binds a key straight away. Typing
+ * searches every column. "Edit Layout" switches to a mode where the HUD modules can be dragged
+ * around.
  *
  * <p>The columns are drawn in screen pixels, not GUI pixels, so they're sharp at every GUI scale.
  * Sizes below are for a 1080p screen and scale with the screen height.
@@ -1015,6 +1016,12 @@ public class HudSettingsPage extends Page {
 				binding.module.setKeybind(key);
 			}
 			binding = null;
+			return true;
+		}
+		// The key that opens the menu also closes it.
+		if (key == HudKeys.openKey()) {
+			HudKeys.onClosedByKey();
+			close();
 			return true;
 		}
 		if (key == GLFW.GLFW_KEY_ESCAPE) {

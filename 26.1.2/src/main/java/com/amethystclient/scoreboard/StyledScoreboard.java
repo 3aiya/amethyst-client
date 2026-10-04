@@ -1,5 +1,7 @@
 package com.amethystclient.scoreboard;
 
+import com.amethystclient.hud.Modules;
+import com.amethystclient.hud.modules.StyledScoreboardModule;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,7 +15,8 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 
 /**
- * Draws the sidebar scoreboard as the Amethyst Community panels on the community's own servers.
+ * Draws the sidebar scoreboard as the Amethyst Community panels on the community's own servers,
+ * while the Styled Scoreboard module is on (its settings pick the side, title, footer, etc.).
  * The server keeps sending a normal scoreboard (TAB plugin), so players without the mod see the
  * vanilla sidebar and nothing changes server side.
  *
@@ -37,7 +40,8 @@ public final class StyledScoreboard {
 	private static final int PANEL_GAP = 3;
 	private static final int SCREEN_MARGIN = 3;
 
-	private static final int BACKGROUND = 0xCC1B2614;
+	/** RGB only: the opacity is the module's Background setting. */
+	private static final int BACKGROUND = 0x1B2614;
 	private static final int BORDER = 0xFFA6D86C;
 	private static final int INNER_BORDER = 0x55A6D86C;
 
@@ -46,6 +50,7 @@ public final class StyledScoreboard {
 
 	public static void extract(GuiGraphicsExtractor graphics, Objective objective) {
 		Font font = Minecraft.getInstance().font;
+		StyledScoreboardModule style = Modules.STYLED_SCOREBOARD;
 		Scoreboard scoreboard = objective.getScoreboard();
 
 		List<Component> body = new ArrayList<>();
@@ -58,13 +63,16 @@ public final class StyledScoreboard {
 		}
 
 		Component header = objective.getDisplayName();
-		if (isBlank(header)) {
+		if (isBlank(header) || !style.showTitle()) {
 			header = null;
 		}
 		Component footer = null;
 		int last = body.size() - 1;
 		if (last >= 1 && !isBlank(body.get(last)) && isBlank(body.get(last - 1))) {
 			footer = body.remove(last);
+		}
+		if (!style.showFooter()) {
+			footer = null;
 		}
 		while (!body.isEmpty() && isBlank(body.getFirst())) {
 			body.removeFirst();
@@ -106,8 +114,8 @@ public final class StyledScoreboard {
 		}
 		totalHeight += (panels - 1) * PANEL_GAP;
 
-		int right = graphics.guiWidth() - SCREEN_MARGIN;
-		int left = right - width;
+		int left = style.leftSide() ? SCREEN_MARGIN : graphics.guiWidth() - SCREEN_MARGIN - width;
+		int right = left + width;
 		int y = (graphics.guiHeight() - totalHeight) / 2;
 
 		if (header != null) {
@@ -131,7 +139,7 @@ public final class StyledScoreboard {
 	/** A translucent panel with a rounded 1px border and a faint inner line. */
 	private static void panel(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2) {
 		frame(graphics, x1, y1, x2, y2, BORDER);
-		graphics.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, BACKGROUND);
+		graphics.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, Modules.STYLED_SCOREBOARD.background(BACKGROUND));
 		frame(graphics, x1 + 2, y1 + 2, x2 - 2, y2 - 2, INNER_BORDER);
 	}
 

@@ -2,6 +2,7 @@ package com.amethystclient.mixin;
 
 import com.amethystclient.AmethystServers;
 import com.amethystclient.hud.AmethystHud;
+import com.amethystclient.hud.Modules;
 import com.amethystclient.scoreboard.StyledScoreboard;
 import com.amethystclient.ui.Draw;
 import net.minecraft.client.MinecraftClient;
@@ -16,14 +17,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
-	/** On Amethyst Community servers, draw the styled sidebar instead of the vanilla one. */
+	/**
+	 * Hide Scoreboard hides the sidebar; otherwise Styled Scoreboard draws it as the Amethyst
+	 * panels (on Amethyst Community servers, or everywhere if set so).
+	 */
 	@Inject(
 			method = "renderScoreboardSidebar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/scoreboard/ScoreboardObjective;)V",
 			at = @At("HEAD"),
 			cancellable = true)
 	private void amethystclient$styledSidebar(DrawContext context, ScoreboardObjective objective, CallbackInfo ci) {
-		if (AmethystServers.isAmethystServer(MinecraftClient.getInstance())) {
+		if (Modules.HIDE_SCOREBOARD.enabled()) {
+			ci.cancel();
+		} else if (Modules.STYLED_SCOREBOARD.replaces(AmethystServers.isAmethystServer(MinecraftClient.getInstance()))) {
 			StyledScoreboard.render(context, objective);
+			ci.cancel();
+		}
+	}
+
+	@Inject(
+			method = "renderTitleAndSubtitle(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V",
+			at = @At("HEAD"),
+			cancellable = true)
+	private void amethystclient$hideTitles(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+		if (Modules.HIDE_TITLES.enabled()) {
 			ci.cancel();
 		}
 	}

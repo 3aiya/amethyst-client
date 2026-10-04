@@ -2,6 +2,7 @@ package com.amethystclient;
 
 import com.amethystclient.accounts.Accounts;
 import com.amethystclient.autologin.AutoLogin;
+import com.amethystclient.chat.ChatTweaks;
 import com.amethystclient.hud.HudKeys;
 import com.amethystclient.packcache.ServerPackManager;
 import com.amethystclient.presence.PresenceTracker;
@@ -33,6 +34,9 @@ public class AmethystClient implements ClientModInitializer {
 
 		// The HUD modules and their settings page (Right Shift).
 		HudKeys.register();
+
+		// The Server column's chat modules (Hide Join/Leave, Chat Timestamps).
+		ChatTweaks.register();
 
 		// When the play phase starts, make sure the active cached pack belongs to this server.
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {

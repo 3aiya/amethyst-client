@@ -4,6 +4,8 @@
 	"package": "com.amethystclient.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"BossHealthOverlayMixin",
+		"ChatComponentMixin",
 		"ClientCommonPacketListenerImplAccessor",
 		"ClientCommonPacketListenerImplMixin",
 		"HudMixin",
