@@ -236,11 +236,21 @@ public final class Ui {
 		smooth(d, x, y, size, size, size / 2, color);
 	}
 
-	/** A soft shadow under a {@link #smooth} rect, spread over {@code size} pixels. */
+	/**
+	 * A soft shadow under a {@link #smooth} rect, spread over {@code size} pixels. The layers are
+	 * drawn with {@link #round} (one rect per row): each is only a few percent opaque, so
+	 * anti-aliasing them is invisible, and per-pixel corners on every layer made the menu crawl.
+	 * At most 8 layers are stacked, each stepping over a band of the spread.
+	 */
 	public static void smoothShadow(Draw d, int x, int y, int w, int h, int r, int size, float strength) {
-		int color = AmethystTheme.withAlpha(0xFF000000, strength / size);
-		for (int i = size; i >= 1; i--) {
-			smooth(d, x - i, y - i + size / 2, w + i * 2, h + i * 2, r + i, color);
+		if (size <= 0) {
+			return;
+		}
+		int layers = Math.min(size, 8);
+		int color = AmethystTheme.withAlpha(0xFF000000, strength / layers);
+		for (int l = layers; l >= 1; l--) {
+			int i = Math.round((float) l * size / layers);
+			round(d, x - i, y - i + size / 2, w + i * 2, h + i * 2, r + i, color);
 		}
 	}
 

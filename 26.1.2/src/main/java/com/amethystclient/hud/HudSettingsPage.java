@@ -479,7 +479,8 @@ public class HudSettingsPage extends Page {
 			}
 			shown++;
 			entry.expand.set(entry.expanded ? 1f : 0f);
-			int rowH = px(ROW_HEIGHT) + Math.round(settingsHeight(d, entry, rowW - px(PAD) * 2) * entry.expand.get());
+			float open = entry.expand.get();
+			int rowH = px(ROW_HEIGHT) + (open > 0f ? Math.round(settingsHeight(d, entry, rowW - px(PAD) * 2) * open) : 0);
 			if (rowY + rowH >= clipTop && rowY < clipBottom) {
 				renderRow(d, t, entry, rowX, rowY, rowW, rowH, rmx, rmy, clipTop, clipBottom);
 			} else {
