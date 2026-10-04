@@ -20,6 +20,8 @@ public final class Draw {
 	private static final Identifier UI_FONT = Identifier.of("amethystclient", "ui");
 	/** The other fonts in assets/amethystclient/font, by name (e.g. "lexend_20"). */
 	private static final Map<String, Identifier> SHARP_FONTS = new HashMap<>();
+	/** The styled text of recent strings, by font, so the same text isn't rebuilt every frame. */
+	private static final Map<Identifier, Map<String, Text>> STYLED = new HashMap<>();
 
 	public final DrawContext graphics;
 	private final TextRenderer font = MinecraftClient.getInstance().textRenderer;
@@ -53,6 +55,48 @@ public final class Draw {
 		}
 	}
 
+	/** A rect fading from {@code top} to {@code bottom}. */
+	public void gradient(int x1, int y1, int x2, int y2, int top, int bottom) {
+		if (x2 > x1 && y2 > y1) {
+			graphics.fillGradient(x1, y1, x2, y2, apply(top), apply(bottom));
+		}
+	}
+	/**
+	 * Draws the ({@code u}, {@code v}, {@code uw}×{@code vh}) part of {@code mask}, tinted with
+	 * {@code color}, stretched over ({@code x}, {@code y}, {@code w}×{@code h}). Here a fill per run
+	 * of equal alpha: this version's fills are drawn straight into a buffer and are cheap.
+	 */
+	public void mask(Mask mask, int x, int y, int w, int h, int u, int v, int uw, int vh, int color) {
+		color = apply(color);
+		if (w <= 0 || h <= 0 || color >>> 24 == 0) {
+			return;
+		}
+		int alpha = color >>> 24;
+		int rgb = color & 0xFFFFFF;
+		int row = 0;
+		while (row < h) {
+			int sy = v + row * vh / h;
+			// Rows stretched from the same mask row are drawn together.
+			int rowEnd = row + 1;
+			while (rowEnd < h && v + rowEnd * vh / h == sy) {
+				rowEnd++;
+			}
+			int col = 0;
+			while (col < w) {
+				int a = mask.alphaAt(u + col * uw / w, sy);
+				int end = col + 1;
+				while (end < w && mask.alphaAt(u + end * uw / w, sy) == a) {
+					end++;
+				}
+				if (a > 0) {
+					graphics.fill(x + col, y + row, x + end, y + rowEnd, (alpha * a / 255) << 24 | rgb);
+				}
+				col = end;
+			}
+			row = rowEnd;
+		}
+	}
+
 	// ---- text ----
 
 	public void text(String text, int x, int y, int color) {
@@ -72,7 +116,11 @@ public final class Draw {
 	}
 
 	private static Text styled(String text, Identifier uiFont) {
-		return Text.literal(text).styled(style -> style.withFont(uiFont));
+		Map<String, Text> cache = STYLED.computeIfAbsent(uiFont, f -> new HashMap<>());
+		if (cache.size() > 512) {
+			cache.clear();
+		}
+		return cache.computeIfAbsent(text, t -> Text.literal(t).styled(style -> style.withFont(uiFont)));
 	}
 
 	/** Like {@link #text}, in another font from assets/amethystclient/font (e.g. "lexend_20"). */

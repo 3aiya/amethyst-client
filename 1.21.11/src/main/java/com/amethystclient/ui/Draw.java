@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -19,6 +22,8 @@ public final class Draw {
 	private static final StyleSpriteSource UI_FONT = new StyleSpriteSource.Font(Identifier.of("amethystclient", "ui"));
 	/** The other fonts in assets/amethystclient/font, by name (e.g. "lexend_20"). */
 	private static final Map<String, StyleSpriteSource> SHARP_FONTS = new HashMap<>();
+	/** The styled text of recent strings, by font, so the same text isn't rebuilt every frame. */
+	private static final Map<StyleSpriteSource, Map<String, Text>> STYLED = new HashMap<>();
 
 	public final DrawContext graphics;
 	private final TextRenderer font = MinecraftClient.getInstance().textRenderer;
@@ -50,6 +55,40 @@ public final class Draw {
 		}
 	}
 
+	/** A rect fading from {@code top} to {@code bottom}. */
+	public void gradient(int x1, int y1, int x2, int y2, int top, int bottom) {
+		if (x2 > x1 && y2 > y1) {
+			graphics.fillGradient(x1, y1, x2, y2, apply(top), apply(bottom));
+		}
+	}
+
+	/**
+	 * Draws the ({@code u}, {@code v}, {@code uw}×{@code vh}) part of {@code mask}, tinted with
+	 * {@code color}, stretched over ({@code x}, {@code y}, {@code w}×{@code h}): one textured quad.
+	 */
+	public void mask(Mask mask, int x, int y, int w, int h, int u, int v, int uw, int vh, int color) {
+		color = apply(color);
+		if (w > 0 && h > 0 && color >>> 24 != 0) {
+			graphics.drawTexture(RenderPipelines.GUI_TEXTURED, texture(mask), x, y, u, v, w, h, uw, vh, mask.width, mask.height, color);
+		}
+	}
+
+	private static Identifier texture(Mask mask) {
+		if (mask.texture instanceof Identifier id) {
+			return id;
+		}
+		NativeImage image = new NativeImage(mask.width, mask.height, false);
+		for (int y = 0; y < mask.height; y++) {
+			for (int x = 0; x < mask.width; x++) {
+				image.setColorArgb(x, y, mask.alphaAt(x, y) << 24 | 0xFFFFFF);
+			}
+		}
+		Identifier id = Identifier.of("amethystclient", "mask/" + mask.key);
+		MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(() -> "Amethyst " + mask.key, image));
+		mask.texture = id;
+		return id;
+	}
+
 	// ---- text ----
 
 	public void text(String text, int x, int y, int color) {
@@ -69,7 +108,11 @@ public final class Draw {
 	}
 
 	private static Text styled(String text, StyleSpriteSource uiFont) {
-		return Text.literal(text).styled(style -> style.withFont(uiFont));
+		Map<String, Text> cache = STYLED.computeIfAbsent(uiFont, f -> new HashMap<>());
+		if (cache.size() > 512) {
+			cache.clear();
+		}
+		return cache.computeIfAbsent(text, t -> Text.literal(t).styled(style -> style.withFont(uiFont)));
 	}
 
 	/** Like {@link #text}, in another font from assets/amethystclient/font (e.g. "lexend_20"). */
